@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>弹窗并声音提示示例</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<script src="jquery-1.8.2.min.js" type="text/javascript"></script>
+	<script type="text/javascript">
+
+		//弹窗实现方法
+	 	function showMessage (widht,height) {
+	 		var TopY=0;//初始化元素距父元素的距离
+			$("#mymessage").css("width",widht+"px").css("height",height+"px");//设置消息框的大小
+			$("#mymessage").slideDown(1000).delay(10000).fadeOut(3000);//弹出
+			$("#message_close").click(function() {//当点击关闭按钮的时候
+				// alert(1);
+				 if(TopY==0){
+			  		 $("#mymessage").slideUp(1000);//这里之所以用slideUp是为了兼用Firefox浏览器
+		 		 }
+				else{
+			 		 $("#mymessage").animate({top: TopY+height}, "slow", function() { $("#mymessage").hide(); });//当TopY不等于0时  ie下和Firefox效果一样
+				 }
+	 		});
+	 		$(window).scroll(function() {
+				 $("#mymessage").css("top", $(window).scrollTop() + $(window).height() - $("#mymessage").height());//当滚动条滚动的时候始终在屏幕的右下角
+				 TopY=$("#mymessage").offset().top;//当滚动条滚动的时候随时设置元素距父原素距离
+	 		 });
+	 	}
+
+
+	 	//播放提示音的方法
+	 	function playMusic(){
+	 		showMessage()
+	 	}
+	 	//定时任务
+	</script>
+	<script type="text/javascript">
+		$(document).ready(function(){
+		showMessage(248,160);
+ 			
+		});
+	</script>
+	<style type="text/css">
+*{
+	font-size:12px;
+}
+#mymessage{
+	right: 0px;
+	bottom: 0px; 
+	position: absolute; 
+	z-index: 999;
+	display:none;
+	border:1px solid blue;
+	background:#cccccc;
+}
+#message_close{position:absolute;right:10px;top:1px;}
+</style>
+</head>
+<body>
+	<div id="mymessage">
+		<div id="mes_close"><a id="message_close" title="点击关闭" href="javascript:void(0);">关闭</a></div>
+		告警列表
+	</div><!--#mymessage-->
+</body>
+</html>

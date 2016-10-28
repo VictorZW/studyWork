@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<title>Examples</title>
+<meta name="description" content="">
+<meta name="keywords" content="">
+<link href="" rel="stylesheet">
+<style type="text/css">
+	.fileUpload {
+    position: relative;
+    overflow: hidden;
+    margin: 10px;
+}
+.fileUpload input.upload {
+    position: absolute;
+    top: 0;
+    right: 0;
+    margin: 0;
+    padding: 0;
+    font-size: 20px;
+    cursor: pointer;
+    opacity: 0;
+    filter: alpha(opacity=0);
+}
+</style>
+<script type="text/javascript">
+function changeVal(){
+	document.getElementById("uploadFile").value = this.value;
+}
+
+</script>
+</head>
+<body>
+   <p style="display:inline"><input id="uploadFile" type="text" disabled="disabled" placeholder="Choose File"></p>
+   <div class="file-upload btn btn-primary"><span>Upload</span>  
+<input class="upload" id="uploadBtn" type="file"></div>
+</body>
+</html>

@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>弹窗并声音提示示例</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<script src="jquery-1.8.2.min.js" type="text/javascript"></script>
+	<script type="text/javascript">
+
+		//弹窗实现方法
+	 	function showMessage (widht,height) {
+	 		var TopY=0;//初始化元素距父元素的距离
+			$("#pop").css("width",widht+"px").css("height",height+"px");//设置消息框的大小
+			$("#pop").slideDown(1000).delay(10000).fadeOut(400);//弹出,并延时关闭
+			$("#popClose").click(function() {//当点击关闭按钮的时候
+				$('#pop').hide();
+	 		});
+	 		$(window).scroll(function() {
+				 $("#pop").css("top", $(window).scrollTop() + $(window).height() - $("#pop").height());//当滚动条滚动的时候始终在屏幕的右下角
+				 TopY=$("#pop").offset().top;//当滚动条滚动的时候随时设置元素距父原素距离
+	 		 });
+	 	}
+
+
+	 	//播放提示音的方法
+	 	function playMusic(url){
+	 		//some code;
+	 		var div = document.getElementById('div1');
+   			 div.innerHTML = '<embed src="'+url+'" loop="0" autostart="true" hidden="true"></embed>';
+	 	}
+
+	 	//检查是否有最新告警
+	 	function checkAlert(){
+	 		$.ajax({
+  				type: 'POST',
+  				url: 'event.do',
+  				data: {id:"",nodeId:"nodeId"},
+  				success: function(msg){
+    					if (true) {
+    						showMessage(248,160);
+    						playMusic('phone.wav');
+    					};
+   					}
+			});
+	 	}
+
+	 	//定时任务
+	 	function timeTask(){
+	 		var taskName = setInterval("showMessage(248,160)",15000);
+	 	}
+	</script>
+	<script type="text/javascript">
+		$(document).ready(function(){
+			timeTask();
+		});
+	</script>
+	<style type="text/css">
+	*{margin:0;padding:0;}
+	#pop{background:#fff;width:260px;border:1px solid #e0e0e0;font-size:12px;position: fixed;right:10px;bottom:10px;}
+	#popHead{line-height:32px;background:#f6f0f3;border-bottom:1px solid #e0e0e0;position:relative;font-size:12px;padding:0 0 0 10px;}
+	#popHead h2{font-size:14px;color:#666;line-height:32px;height:32px;}
+	#popHead #popClose{position:absolute;right:10px;top:1px;}
+	#popHead a#popClose:hover{color:#f00;cursor:pointer;}
+	#popContent{padding:5px 10px;}
+	#popTitle a{line-height:24px;font-size:14px;font-family:'微软雅黑';color:#333;font-weight:bold;text-decoration:none;}
+	#popTitle a:hover{color:#f60;}
+	#popIntro{text-indent:24px;line-height:160%;margin:5px 0;color:#666;}
+	#popMore{text-align:right;border-top:1px dotted #ccc;line-height:24px;margin:8px 0 0 0;}
+	#popMore a{color:#f60;}
+	#popMore a:hover{color:#f00;}
+	</style>
+	
+</head>
+<body>
+	<div id="pop" style="display:none;">
+	<div id="popHead">
+	<a id="popClose" title="关闭">关闭</a>
+	<h2>告警提示</h2>
+	</div>
+	<div id="popContent">
+	<dl>
+		
+		<dd id="popIntro">紧急告警，请及时处理</dd>
+	</dl>
+	<p id="popMore"><a href="#" target="_blank">查看 »</a></p>
+	</div>
+	</div>
+	<div id="div1"></div>
+</body>
+</html>

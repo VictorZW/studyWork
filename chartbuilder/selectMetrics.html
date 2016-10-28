@@ -1,0 +1,192 @@
+<html>
+<head>
+    <meta charset="utf-8"/>
+    <style type="text/css">
+
+    </style>
+    <script>
+        $(function () {
+            /*步骤导航*/
+            $('#rootwizard').bootstrapWizard({onTabClick: function(tab, navigation, index) {
+                return false;
+            }});
+
+            $("#checkAllDevices").click(function() {
+                $('input[name="devices"]').attr("checked",this.checked);
+            });
+            /*指标选择完毕*/
+            $('#rootwizard .finish').click(function() {
+                var categorys = $("input[name='deviceType']:checked").val();
+                var devices ='';
+                var zhibiaos = '';
+                $("input[name='devices']:checked").each(function(){
+                    devices = devices+',' +$(this).val();
+                });
+                $("input[name='zhibiao']:checked").each(function(){
+                    zhibiaos = zhibiaos + ',' +$(this).val();
+                });
+                //用户选择的指标
+                $("#selectCategory").val(categorys);
+                $("#selectDevices").val(devices);
+                $("#selectMetrics").val(zhibiaos);
+                closeDialog();
+                drawChart();
+                $('#rootwizard').find("a[href*='tab1']").trigger('click');
+            });
+
+
+            /*表格搜索*/
+            $(".search").keyup(function () {
+                var searchTerm = $(".search").val();
+                var listItem = $('.results tbody').children('tr');
+                var searchSplit = searchTerm.replace(/ /g, "'):containsi('")
+
+                $.extend($.expr[':'], {'containsi': function(elem, i, match, array){
+                    return (elem.textContent || elem.innerText || '').toLowerCase().indexOf((match[3] || "").toLowerCase()) >= 0;
+                }
+                });
+
+                $(".results tbody tr").not(":containsi('" + searchSplit + "')").each(function(e){
+                    $(this).attr('visible','false');
+                });
+
+                $(".results tbody tr:containsi('" + searchSplit + "')").each(function(e){
+                    $(this).attr('visible','true');
+                });
+
+                var jobCount = $('.results tbody tr[visible="true"]').length;
+                $('.counter').text(jobCount + ' 项');
+
+                if(jobCount == '0') {$('.no-result').show();}
+                else {$('.no-result').hide();}
+            });
+        });
+    </script>
+</head>
+<body>
+<div id="rootwizard">
+    <div class="navbar">
+        <div class="navbar-inner">
+            <div class="container">
+                <ul class="nav nav-pills">
+                    <li><a href="#tab1" data-toggle="tab">选择设备类型</a></li>
+                    <li><a href="#tab2" data-toggle="tab">选择设备</a></li>
+                    <li><a href="#tab3" data-toggle="tab">选择指标</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="tab-content">
+        <div class="tab-pane" id="tab1">
+            <table class="table">
+                <tr>
+                    <td><input type="radio" name="deviceType" value="host" checked="checked"> 主机</td>
+                    <td><input type="radio" name="deviceType" value="db" > 数据库</td>
+                    <td><input type="radio" name="deviceType" value="midware" > 中间件</td>
+                    <td><input type="radio" name="deviceType" value="net"> 网络设备</td>
+                </tr>
+            </table>
+        </div>
+        <div class="tab-pane" id="tab2">
+            <div style="margin-bottom: 5px;" class="form-group pull-right">
+                <input type="text" class="search form-control" placeholder="查找？">
+            </div>
+            <span class="counter pull-right"></span>
+            <table class="table table-hover table-bordered results">
+                <thead>
+                <tr>
+                    <th><input type="checkbox" id="checkAllDevices" ></th>
+                    <th class="col-md-5 col-xs-5">资源名称</th>
+                    <th class="col-md-4 col-xs-4">IP 地址</th>
+                    <th class="col-md-3 col-xs-3">厂商</th>
+                </tr>
+                <tr class="warning no-result">
+                    <td colspan="4"><i class="fa fa-warning"></i> 没有找到结果</td>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <th scope="row"><input type="checkbox" name="devices" value="172.21.152.115"></th>
+                    <td>72_21_152_115</td>
+                    <td>172.21.152.115</td>
+                    <td>IBM</td>
+                </tr>
+                <tr>
+                    <th scope="row"><input type="checkbox" name="devices" value="172.21.152.115" ></th>
+                    <td>72_21_152_115</td>
+                    <td>172.21.152.115</td>
+                    <td>IBM</td>
+                </tr>
+                <tr>
+                    <th scope="row"><input type="checkbox" name="devices" value="172.21.152.115" ></th>
+                    <td>72_21_152_115</td>
+                    <td>172.21.152.115</td>
+                    <td>IBM</td>
+                </tr>
+                <tr>
+                    <th scope="row"><input type="checkbox" name="devices" value="172.21.152.115" ></th>
+                    <td>72_21_152_115</td>
+                    <td>172.21.152.115</td>
+                    <td>IBM</td>
+                </tr>
+                <tr>
+                    <th scope="row"><input type="checkbox" name="devices" value="172.21.152.115"></th>
+                    <td>72_21_152_115</td>
+                    <td>172.21.152.115</td>
+                    <td>IBM</td>
+                </tr>
+                <tr>
+                    <th scope="row"><input type="checkbox" name="devices" value="172.21.152.115" ></th>
+                    <td>72_21_152_115</td>
+                    <td>172.21.152.115</td>
+                    <td>IBM</td>
+                </tr>
+                <tr>
+                    <th scope="row"><input type="checkbox" name="devices" value="172.21.152.115" ></th>
+                    <td>72_21_152_115</td>
+                    <td>172.21.152.115</td>
+                    <td>IBM</td>
+                </tr>
+                <tr>
+                    <th scope="row"><input type="checkbox" name="devices" value="172.21.152.115"></th>
+                    <td>72_21_152_115</td>
+                    <td>172.21.152.115</td>
+                    <td>IBM</td>
+                </tr>
+                <tr>
+                    <th scope="row"><input type="checkbox" name="devices" value="172.21.152.115" ></th>
+                    <td>72_21_152_115</td>
+                    <td>172.21.152.115</td>
+                    <td>IBM</td>
+                </tr>
+                <tr>
+                    <th scope="row"><input type="checkbox" name="devices" value="172.21.152.115"></th>
+                    <td>72_21_152_115</td>
+                    <td>172.21.152.115</td>
+                    <td>IBM</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="tab-pane" id="tab3">
+            <table class="table">
+                <tr>
+                    <td><input type="checkbox" name="zhibiao" value="cpuPercent" checked="checked"> cpu利用率</td>
+                    <td><input type="checkbox" name="zhibiao" value="memoryPercent" > 内存利用率</td>
+                    <td><input type="checkbox" name="zhibiao" value="temperature" > 温度</td>
+                    <td><input type="checkbox" name="zhibiao" value="diskPercent"> 磁盘利用率</td>
+                </tr>
+            </table>
+        </div>
+        <ul class="pager wizard">
+            <li class="previous first" style="display:none;"><a href="#">First</a></li>
+            <li class="previous"><a href="#">上一步</a></li>
+            <li class="next last" style="display:none;"><a href="#">Last</a></li>
+            <li class="next"><a href="#">下一步</a></li>
+            <li class="finish"><a href="javascript:;">完成</a></li>
+        </ul>
+    </div>
+</div>
+
+</body>
+</html>
