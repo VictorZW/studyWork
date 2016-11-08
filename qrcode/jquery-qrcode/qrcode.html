@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+	<head>
+	  <meta charset="utf-8"/>
+      <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+      <title>使用jQuery生成二维码-简单生成</title>
+      <meta name="author" content="iwwenbo"/>
+      <script type="text/javascript" src="js/jquery.min.js"></script>
+      <script type="text/javascript" src="js/jquery.qrcode.min.js"></script>
+      
+	</head>
+	<body>
+		<div id="qr" class="qrcode visible-lg"></div>
+		<script type="text/javascript">
+      $('#qr').qrcode({
+          width: 128,
+          height: 128,
+          text: 'http://weibo.com/shuaidehenkaopu'
+      });
+      </script>
+	</body>
+</html>

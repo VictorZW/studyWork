@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>右键菜单示例1</title>
+    <script type="text/javascript" src="js/jquery-1.11.1.min.js"></script>
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <!-- Js代码 -->
+	<script type="text/javascript">
+		$(document).bind("contextmenu", function(event) {
+   			 event.preventDefault();
+   			 $(".context").show().css({
+            	top: event.pageY + 15,
+            	left: event.pageX + 10
+       		 });
+		});
+		$(document).click(function() {
+   			 isHovered = $(".context").is(":hover");
+    		 if (isHovered == true) {
+      	  		//nothing
+    		} else {
+        		$(".context").fadeOut("fast");
+        		//$(".context").hide();
+    		}
+		});
+	</script>
+	<!-- 样式表 -->
+	<style type="text/css">
+		@import url(http://fonts.useso.com/css?family=Roboto);
+		body {
+    		font-family: 'Roboto', sans-serif;
+    		background-color: #eee;
+    		font-size: 14px;
+		}
+		body p {
+   	 		font-size: 2em;
+		}
+		.context {
+    		font-size: 1.1em;
+    		position: absolute;
+    		width: 200px;
+    		height: auto;
+    		padding: 5px 0px;
+    		border-radius: 5px;
+    		top: 10;
+    		left: 10;
+    		background-color: #fff;
+    		box-shadow: 0 12px 15px 0 rgba(0, 0, 0, 0.24);
+    		color: #333;
+		}
+		.context .context_item {
+		    height: 32px;
+		    line-height: 32px;
+		    cursor: pointer;
+		    text-overflow: ellipsis;
+		    overflow: hidden;
+		    white-space: nowrap;
+		}
+		.context .context_item:hover {
+		    background-color: #ddd;
+		}
+		.context .context_item .inner_item {
+		    margin: 0px 10px;
+		}
+		.context .context_item .inner_item i {
+		    margin: 0 5px 0 0;
+		    font-weight: bold;
+		}
+		.context .context_hr {
+		    height: 1px;
+		    border-top: 1px solid #bbb;
+		    margin: 3px 10px;
+		}
+	</style>
+</head>
+<body>
+<p>按下右键出现弹出菜单</p>
+
+<div class="context" hidden>
+    <div class="context_item">
+        <div class="inner_item">
+           <i class="glyphicon glyphicon-file"></i> Copy
+        </div>
+    </div>
+    <div class="context_item">
+        <div class="inner_item">
+           <i class="glyphicon glyphicon-scissors"></i> Cut
+        </div>
+    </div>
+    <div class="context_item">
+        <div class="inner_item">
+           <i class="glyphicon glyphicon-duplicate"></i> Paste
+        </div>
+    </div>
+    <div class="context_hr"></div>
+    <div class="context_item">
+        <div class="inner_item">
+          <i class="glyphicon glyphicon-share-alt"></i>  Share
+        </div>
+    </div>
+    <div class="context_item">
+        <div class="inner_item">
+           <i class="glyphicon glyphicon-remove"></i> Delete
+        </div>
+    </div>
+
+</div>
+</body>
+</html>

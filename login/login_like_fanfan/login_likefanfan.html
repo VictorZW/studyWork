@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<!-- saved from url=(0027)http://www.fanfan.cn/login/ -->
+<html class=""><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,Chrome=1">
+<meta name="renderer" content="webkit">
+<title>登录 - 模拟饭饭</title>
+<meta http-equiv="Cache-Control" content="no-transform "> 
+<!--<base href="http://www.fanfan.cn/">--><base href="."><!--[if IE]></base><![endif]-->
+<link rel="shortcut icon" href="http://www.fanfan.cn/favicon.ico">
+<link rel="stylesheet" type="text/css" href="./resource/bootstrap.css">
+<link rel="stylesheet" type="text/css" href="./resource/font-awesome.css">
+<link rel="stylesheet" type="text/css" href="./resource/aw-font.css">
+
+		
+<link href="./resource/common.css" rel="stylesheet" type="text/css">
+<link href="./resource/link.css" rel="stylesheet" type="text/css">
+<link href="./resource/style.css" rel="stylesheet" type="text/css">
+<link href="./resource/login.css" rel="stylesheet" type="text/css">
+
+<link href="./resource/classblack.css" rel="stylesheet" type="text/css">
+
+<script type="text/javascript">
+	var _F165E488BC52F0274FF6423C49CBAE55='';
+	var G_POST_HASH=_F165E488BC52F0274FF6423C49CBAE55;
+	var G_INDEX_SCRIPT = '';
+	var G_SITE_NAME = '文波の小站';
+	var G_BASE_URL = 'http://www.wenboxz.com';
+	var G_USER_ID = 0;
+	var G_USER_NAME = '';
+	var G_UPLOAD_ENABLE = 'N';
+	var G_UNREAD_NOTIFICATION = 0;
+	var G_NOTIFICATION_INTERVAL = 100000;
+	var G_CAN_CREATE_TOPIC = '';
+	
+	</script>
+<script src="./resource/jquery.2.js" type="text/javascript"></script>
+<script src="./resource/jquery.form.js" type="text/javascript"></script>
+<script src="./resource/plug-in_module.js" type="text/javascript"></script>
+<script src="./resource/functions.js" type="text/javascript"></script>
+<script src="./resource/aw_template.js" type="text/javascript"></script>
+<script src="./resource/common.js" type="text/javascript"></script>
+<script src="./resource/app.js" type="text/javascript"></script>
+<script src="./resource/md5.js" type="text/javascript"></script>
+<script type="text/javascript" src="./resource/compatibility.js"></script>
+<!--[if lte IE 8]>
+	<script type="text/javascript" src="http://www.fanfan.cn/static/js/respond.js"></script>
+<![endif]-->
+<style type="text/css">.fancybox-margin{margin-right:17px;}</style></head><body><script src="./resource/jiathis.php" charset="utf-8"></script><link href="./resource/jiathis_share.css" rel="stylesheet" type="text/css"><iframe frameborder="0" style="position: absolute; display: none; opacity: 0;"></iframe><div class="jiathis_style" style="position: absolute; z-index: 1000000000; display: none; top: 50%; left: 50%; overflow: auto;"></div><div class="jiathis_style" style="position: absolute; z-index: 1000000000; display: none; overflow: auto;"></div><iframe frameborder="0" src="./resource/jiathis_utility.htm" style="display: none;"></iframe>
+<div id="wrapper" class="clearfix">
+	<div class="aw-login-wrap clearfix">
+		<!-- 登陆框 -->
+		<div class="aw-login-box pull-right">
+			<div class="aw-mod">
+				<div class="aw-mod-head">
+					<a href="http://www.wenboxz.com" class="b-new-user pull-right">注册新用户</a>
+					<i class="fa fa-user"></i>
+					<span class="hidden-xs">登录</span>
+				</div>
+				<div class="aw-mod-body">
+					<form id="login_form" method="post" onsubmit="return false" action="http://www.fanfan.cn/account/ajax/login_process/">
+						<input type="hidden" name="return_url" value="http://www.fanfan.cn/explore/">
+						<ul>
+							<li>
+								<label class="aw-label-icon pull-left" for="aw-login-user-name"><i class="fa fa-user"></i></label>
+								<input type="text" id="aw-login-user-name" class="form-control" placeholder="邮箱/用户名" name="user_name">
+							</li>
+							<li>
+								<label class="aw-label-icon pull-left" for="aw-login-user-password"><i class="fa fa-key"></i></label>
+								<input type="password" id="aw-login-user-password" class="form-control" placeholder="密码" name="password">
+							</li>
+							<li class="alert alert-danger hide error_message">
+								<i class="fa fa-times"></i><em></em>
+							</li>
+							<li class="last">
+								<a href="javascript:;" onclick="ajax_post($(&#39;#login_form&#39;), _error_message_form_processer);" id="login_submit" class="pull-right btn btn-large btn-success">登录</a>
+								<input id="login-radio" type="checkbox" value="1" name="net_auto_login">
+								<label for="login-radio">记住我</label>
+								<a href="http://www.wenboxz.com/">忘记密码?</a>
+							</li>
+						</ul>
+					</form>
+				</div>
+				<div class="aw-mod-footer">
+					<div class="jiathis_style" style="float:left;">
+							<span class="jiathis_txt" style="margin-top:30px;">分享到：</span>
+							<a class="jiathis_button_weixin" title="分享到微信"><span class="jiathis_txt jtico jtico_weixin"></span></a>
+							<a class="jiathis_button_tsina" title="分享到新浪微博"><span class="jiathis_txt jtico jtico_tsina"></span></a>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!-- end 登陆框 -->
+		<!-- 左侧文字介绍部分 -->
+		<h1 class="hidden-xs">
+			<img src="./resource/login_logo.png" alt="饭饭">
+			<p>交流开发技术的原创社区。</p>
+		</h1>
+		<div class="aw-login-state hidden-xs">
+			<p style="display: none;">
+				欢迎来到 月儿湾。我们是一群对技术有点偏执的家伙，希望你也是。<br><span>分享开发经验，从Yuerwan.net开始。</span>
+			</p>
+			<p class="hide" style="display: block;">
+				Nothing is impossible for a willing heart!			</p>
+			<p class="hide" style="display: none;">
+				每一个不曾起舞的日子，都是对生命的一种辜负。<br><span>改变从现在开始，飞过，必留下痕迹。</span>
+			</p>
+		</div>
+		<!-- end 左侧文字介绍部分 -->
+		
+		<div class="aw-login-box-bg hidden-xs">
+		</div>
+	</div>
+	<!-- 背景切换 -->
+	<div class="aw-bg-wrap hidden-xs">
+		<ul id="aw-bg-loading">
+			<li style="height: 824px; z-index: 2; opacity: 0; background-image: url(resource/img/login_01.jpg);"></li>
+			<li style="height: 824px; z-index: 1; opacity: 1; background-image: url(resource/img/login_02.jpg);"></li>
+			<li style="height: 824px; z-index: 1; opacity: 0; background-image: url(resource/img/login_03.jpg);"></li>
+		</ul>
+	</div>
+	<!-- end 背景切换 -->
+</div>
+
+<script type="text/javascript" src="./resource/login.js"></script>
+
+<div class="aw-footer-wrap">
+	<div class="aw-footer aw-wecenter">
+		版权所有© 2014 Yuerwan.net <span class="hidden-xs"> -All Rights Reserved.
+<br></span>
+
+		
+		<span class="hidden-xs">
+
+<a href="http://www.yuerwan.net/">月儿湾</a>是一个爱技术、爱分享、爱生活的社区。
+
+
+</span>
+		
+			</div>
+</div>
+
+
+
+<a class="aw-back-top hidden-xs" href="javascript:;" onclick="$.scrollTo(1, 600, {queue:true});"><i class="fa fa-arrow-up"></i></a>
+
+<script type="text/javascript">
+var _bdhmProtocol = (("https:" == document.location.protocol) ? " https://" : " http://");
+document.write(unescape("%3Cscript src='" + _bdhmProtocol + "hm.baidu.com/h.js%3F1c7c0c1a66186acbf4c609dee49548ee' type='text/javascript'%3E%3C/script%3E"));
+</script><script src="./resource/h.js" type="text/javascript"></script>
+
+<!-- DO NOT REMOVE -->
+<div id="aw-ajax-box" class="aw-ajax-box"></div>
+
+<div style="display:none;" id="__crond"><img src="./resource/1410004236" width="1" height="1"></div>
+
+<!-- Escape time: 0.082159996032715 -->
+
+ 
+ 
+ 
+ 
+<script type="text/javascript" id="bdshare_js" data="type=tools"></script>
+<!-- / DO NOT REMOVE -->
+		<script type="text/javascript">
+var jiathis_config={
+	data_track_clickback:true,
+	siteNum:1,
+	sm:"weixin",
+	summary:"",
+	appkey:{
+		"tsina":"2059976885"
+	},
+	shortUrl:false,
+	hideMore:true
+}
+</script>
+<script type="text/javascript" src="./resource/jia.js" charset="utf-8"></script><script type="text/javascript" src="./resource/plugin.client.js" charset="utf-8"></script><div style="position:absolute;width:0px;height:0px;"><object classid="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000" width="0" height="0" id="JIATHISSWF" codebase="http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab"><param name="allowScriptAccess" value="always"><param name="swLiveConnect" value="true"><param name="movie" value="http://www.jiathis.com/code/swf/m.swf"><param name="FlashVars" value="z=a"><embed name="JIATHISSWF" src="http://www.jiathis.com/code/swf/m.swf" flashvars="z=a" width="0" height="0" allowscriptaccess="always" swliveconnect="true" type="application/x-shockwave-flash" pluginspage="http://www.macromedia.com/go/getflashplayer"></object></div>
+	
+
+</body></html>
