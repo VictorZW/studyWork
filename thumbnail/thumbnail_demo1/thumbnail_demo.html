@@ -1,0 +1,96 @@
+﻿<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<title>jQuery缩略图插件jQThumb演示</title>
+<style>
+* { margin: 0; padding: 0;}
+.iwwenbo { width: 920px; margin: 0 auto; list-style-type: none; zoom: 1;}
+.iwwenbo:after { content: ''; display: table; clear: both;}
+.iwwenbo li { float: left; width: 200px; height: 200px; margin: 20px 10px 0; display: inline;}
+.iwwenbo1 { border: 5px solid #d9534f;}
+.iwwenbo1 img { width: 200px; height: 200px; vertical-align: top;}
+.iwwenbo2 { border: 5px solid #5cb85c;}
+</style>
+<script src="js/jquery-1.8.3.min.js"></script>
+<script src="js/jqthumb.min.js"></script>
+<script>
+$(function(){
+	$('.iwwenbo2 img').jqthumb({
+		width: 100, //生成的缩略图的宽度
+		height: 100,//生成的缩略图的高度
+		after: function(imgObj){
+			imgObj.css('opacity', 0).animate({opacity: 1}, 2000);//动画效果
+		}
+	});
+});
+</script>
+</head>
+
+<body>
+<h1>jQuery缩略图插件jQThumb演示</h1>
+
+<p class="iwwenbo-explain">一共有8张尺寸各不同的图片，红色方框里的图片是用样式固定死的，明显有拉伸的现象。而绿色方框里的是使用插件创建的，没有拉伸，效果好很多。</p>
+
+<ul class="iwwenbo">
+	<li class="iwwenbo1"><img src="images/1.jpg" alt="美女1"></li>
+	<li class="iwwenbo1"><img src="images/2.jpg" alt="美女2"></li>
+	<li class="iwwenbo1"><img src="images/3.jpg" alt="美女3"></li>
+	<li class="iwwenbo1"><img src="images/4.jpg" alt="美女4"></li>
+	<li class="iwwenbo2"><img src="images/1.jpg" alt="美女1"></li>
+	<li class="iwwenbo2"><img src="images/2.jpg" alt="美女2"></li>
+	<li class="iwwenbo2"><img src="images/3.jpg" alt="美女3"></li>
+	<li class="iwwenbo2"><img src="images/4.jpg" alt="美女4"></li>
+
+	<li class="iwwenbo1"><img src="images/5.jpg" alt="美女5"></li>
+	<li class="iwwenbo1"><img src="images/6.jpg" alt="美女6"></li>
+	<li class="iwwenbo1"><img src="images/7.jpg" alt="美女7"></li>
+	<li class="iwwenbo1"><img src="images/8.jpg" alt="美女8"></li>
+	<li class="iwwenbo2"><img src="images/5.jpg" alt="美女5"></li>
+	<li class="iwwenbo2"><img src="images/6.jpg" alt="美女6"></li>
+	<li class="iwwenbo2"><img src="images/7.jpg" alt="美女7"></li>
+	<li class="iwwenbo2"><img src="images/8.jpg" alt="美女8"></li>
+</ul>
+
+<p class="vad">
+	<a href="https://www.rxblog.xyz" target="_blank">容休博客</a>
+	<a href="https://www.rxblog.xyz" target="_blank">说明</a>
+	<a href="https://github.com/rxwangwb/studyWork/thumbnail/thumbnail_demo1" target="_blank">下 载</a>
+</p>
+
+
+
+
+
+
+
+
+
+
+
+<!-- 以下是统计及其他信息，与演示无关，不必理会 -->
+<style>
+* { margin: 0; padding: 0;}
+body { font-family: Consolas,arial,"宋体";}
+h1 { width: 900px; margin: 40px auto; font: 32px "Microsoft Yahei"; text-align: center;}
+.explain, .iwwenbo-explain { margin-top: 20px; font-size: 14px; text-align: center; color: #f50;}
+
+.vad { margin: 50px 0 5px; font-family: Consolas,arial,宋体; text-align:center;}
+.vad a { display: inline-block; height: 36px; line-height: 36px; margin: 0 5px; padding: 0 50px; font-size: 14px; text-align:center; color:#eee; text-decoration: none; background-color: #222;}
+.vad a:hover { color: #fff; background-color: #000;}
+.thead { width: 728px; height: 90px; margin: 0 auto; border-bottom: 40px solid #fff;}
+
+.code { position: relative; margin-top: 100px; padding-top: 41px;}
+.code h3 { position: absolute; top: 0; z-index: 10; width: 100px; height: 40px; font: 16px/40px "Microsoft Yahei"; text-align: center; cursor: pointer;}
+.code .cur { border: 1px solid #f0f0f0; border-bottom: 1px solid #f8f8f8; background-color: #f8f8f8;}
+.code .h31 { left: 0;}
+.code .h32 { left: 102px;}
+.code .h33 { left: 204px;}
+.code .h34 { left: 306px;}
+.code { width: 900px; margin-left: auto; margin-right: auto;}
+pre { padding: 15px 0; border: 1px solid #f0f0f0; background-color: #f8f8f8;}
+.f-dn { display: none;}
+</style>
+
+</body>
+</html>

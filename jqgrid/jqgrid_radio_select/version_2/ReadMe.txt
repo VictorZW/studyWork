@@ -1,0 +1,1 @@
+jquery.jqGrid-4.4.3是支持IE6的jqgrid版本中最新的一个，但是对jquery版本有要求，因为jquery1.9之后，不支持$.browser，参考：http://blchen.com/jquery-can-not-read-property-msie-of-the-undefined-error-solution/

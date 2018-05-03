@@ -7,16 +7,18 @@
       <meta name="author" content="iwwenbo"/>
       <script type="text/javascript" src="js/jquery.min.js"></script>
       <script type="text/javascript" src="js/jquery.qrcode.min.js"></script>
-      
+      <script type="text/javascript">
+
+      $(function(){
+	      $('#qr').qrcode({
+          width: 256,
+          height: 256,
+          text: 'https://jq.qq.com/?_wv=1027&k=45DmDvS'
+        })
+      });
+      </script>
 	</head>
 	<body>
 		<div id="qr" class="qrcode visible-lg"></div>
-		<script type="text/javascript">
-      $('#qr').qrcode({
-          width: 128,
-          height: 128,
-          text: 'http://weibo.com/shuaidehenkaopu'
-      });
-      </script>
 	</body>
 </html>
