@@ -1,0 +1,204 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>用jQuery和CSS实现的简单选项卡</title>
+<style type="text/css">
+/*定义整体背景颜色、字体、字号等*/
+body {
+	background: #f0f0f0;
+	margin: 0;
+	padding: 0;
+	font: 10px normal Verdana, Arial, Helvetica, sans-serif;
+	color: #444;
+}
+/*大标题样式*/
+h1 {font-size: 3em; margin: 20px 0;}
+/*定义选项卡和内容等的边界*/
+.container {width: 500px; margin: 10px auto;}
+/*无序列表样式*/
+ul.tabs {
+	margin: 0;
+	padding: 0;
+	float: left;
+	list-style: none;
+	height: 32px;
+	/*border-bottom: 1px solid #999;*/
+	border-left: 1px solid #999;
+	width: 100%;
+}
+/*无序列表中各列表项的样式*/
+ul.tabs li {
+	float: left;
+	margin: 0;
+	padding: 0;
+	height: 31px;
+	line-height: 31px;
+	/*border: 1px solid #999;*/
+	/*border-bottom: 1px solid #999;*/
+	/*border-left: none;
+	border-top: none;*/
+	margin-bottom: -1px;
+	background: #e0e0e0;
+	overflow: hidden;
+	position: relative;
+}
+/*无序列表中列表项中的链接的样式*/
+ul.tabs li a {
+	text-decoration: none;
+	color: #000;
+	display: block;
+	font-size: 1.2em;
+	padding: 0 20px;
+	border: 1px solid #fff;
+	outline: none;
+}
+/*为列表项的超链接增加鼠标悬停时的效果*/
+/*ul.tabs li a:hover {
+	background: #ccc;
+}*/
+/*给当前选中，即活动的选项卡添加样式*/
+html ul.tabs li.active, html ul.tabs li.active a:hover  {
+	/*background: #fff;*/
+	color: orange;
+	border-bottom: 1px solid #fff;/*当前选中的选项卡的下方的边界线增加样式，更加美观*/
+}
+/*对存放各选项卡内容的外层DIV定义样式*/
+.tab_container {
+	border: 1px solid #999;
+	border-top: none;
+	clear: both;
+	float: left; 
+	width: 100%;
+	background: #fff;
+	-moz-border-radius-bottomright: 5px;
+	-khtml-border-radius-bottomright: 5px;
+	-webkit-border-bottom-right-radius: 5px;
+	-moz-border-radius-bottomleft: 5px;
+	-khtml-border-radius-bottomleft: 5px;
+	-webkit-border-bottom-left-radius: 5px;
+}	
+/*当前显示的内容的div定义样式*/
+.tab_content {
+	padding: 20px;
+	font-size: 1.2em;
+}
+/*内容标题样式*/
+.tab_content h2 {
+	font-weight: normal;
+	padding-bottom: 10px;
+	border-bottom: 1px dashed #ddd; /*标题下方添加虚线*/
+	font-size: 1.8em;
+}
+/*内容中“更多精彩请点击”链接颜色*/
+.tab_content h3 a{
+	color: #254588;
+}
+/*内容中图片样式*/
+.tab_content img {
+	float: left;
+	margin: 0 20px 20px 0;
+	border: 1px solid #ddd;
+	padding: 5px;
+}
+.corner{
+     position:absolute;
+     height:0;
+     width:0;
+	 top:0;
+     right:0;
+     overflow:hidden;
+     border-top:solid 16px #fff;
+     border-left:solid 16px #e0e0e0;
+     }
+</style>
+<!-- 下面通过js控制选项卡的切换 -->
+<script type="text/javascript"src="jquery.js"></script>
+<script type="text/javascript">
+
+$(document).ready(function() {
+
+	//默认操作，当页面加载完成后进行
+	$(".tab_content").hide(); //先隐藏所有所有存放选项卡内容的div
+	$("ul.tabs li:first").addClass("active").show(); //给第一个选项卡增加“active”样式，即默认当前活动的是第一个选项卡
+	$(".tab_content:first").show(); //让第一个选项卡的内容显示出来
+	
+	//定义选项卡的点击事件
+	$("ul.tabs li").click(function() {
+		$("ul.tabs li").removeClass("active"); //去除所有选项卡的活动状态的样式
+		$(this).addClass("active"); //为当前点击的选项卡增加活动状态的样式
+		$(".tab_content").hide(); //隐藏所有选项卡的内容
+		var activeTab = $(this).find("a").attr("href"); //找到当前点击的选项卡的链接到的对应的内容的div id
+		$(activeTab).fadeIn(); //让上面找到的div显示出来
+		return false;
+	});
+
+});
+</script>
+</head>
+
+<body>
+
+<div class="container">
+
+	<h1>用jQuery和CSS实现的简单选项卡</h1>
+    <ul class="tabs">
+        <li><a href="#tab1"><span class="corner"></span>Tab1</a></li>
+        <li><a href="#tab2"><span class="corner"></span>Tab2</a></li>
+        <li><a href="#tab3"><span class="corner"></span>Tab3</a></li>
+        <li><a href="#tab4"><span class="corner"></span>Tab4</a></li>
+
+    </ul>
+    <div class="tab_container">
+        <div id="tab1" class="tab_content">
+            <h2>This is Tab1</h2>
+            <a href="#"><img src="simonamunteanu_thumb.gif" alt="" /></a>
+            <h3><a href="http://www.wenboxz.com">更多精彩请点击</a></h3>
+            <p>Saw polecat than took bankrupt good hillbilly stew, crazy, fancy and hillbilly heap rodeo, pappy. Thar range saw me him sherrif nothin' shiney dirt, pigs sheep city-slickers everlastin' shotgun driveway. Promenade catfight fart fiddle jiggly gonna tarnation, fence, what quarrel dirty, if. Pot grandma crop kinfolk jezebel diesel coonskin hoosegow wirey fixin' shack good roped in. Reckon stew tax-collectors, grandpa tobaccee hayseed good wash tired caboodle burnin' landlord. </p>
+
+            
+            <p>Smokin' driveway wrestlin' go darn truck moonshine wirey cow grandpa saw, coonskin bull, java, huntin'. </p>
+            
+            <p>Stinky yonder pigs in, rustle kinfolk gonna marshal sittin' wagon, grandpa. Ya them firewood buffalo, tobaccee cabin.</p>
+        </div>
+        <div id="tab2" class="tab_content">
+            <h2>This is Tab2</h2>
+            <a href="#"> <img src="sketchblog_thumb.gif" alt="" /></a>
+            <h3><a href="http://www.wenboxz.com">更多精彩请点击</a></h3>
+
+            <p>Grandma been has bankrupt said hospitality fence everlastin' wrestlin' rodeo redblooded chitlins marshal. Boobtube soap her hootch lordy cow, rattler. </p>
+            
+            <p>Rottgut havin' ignorant go, hee-haw shiney jail fetched hillbilly havin' cipherin'. Bacon no cowpoke tobaccee horse water rightly trailer tools git hillbilly. </p>
+            
+            <p>Jezebel had whiskey snakeoil, askin' weren't, skanky aunt townfolk fetched. Fit tractor, them broke askin', them havin' rattler fell heffer, been tax-collectors buffalo. Quarrel confounded fence wagon trailer, moonshine wuz, city-slickers fixin' cow. </p>
+        </div>
+        <div id="tab3" class="tab_content">
+            <h2>This is Tab3</h2>
+          	<a href="#"><img src="mynus_thumb.gif" alt="" /></a>
+
+            <h3><a href="http://www.wenboxz.com">更多精彩请点击</a></h3>
+            <p>Dirt tools thar, pot buffalo put jehosephat rent, ya pot promenade. Come pickled far greasy fightin', wirey, it poor yer, drive jig landlord. Rustle is been moonshine whomp hogtied. Stew, wirey stew cold uncle ails. Slap hoosegow road cooked, where gal pot, commencin' country. Weren't dogs backwoods, city-slickers me afford boxcar fat, dumb sittin' sittin' drive rustle slap, tornado. Fuss stinky knickers whomp ain't, city-slickers sherrif darn ignorant tobaccee round-up old buckshot that. </p>
+            
+            <p>Deep-fried over shootin' a wagon cheatin' work cowpoke poor, wuz, whiskey got wirey that. Shot beer, broke kickin' havin' buckshot gritts. Drunk, em moonshine his commencin' country drunk chitlins stole. Fer tonic boxcar liar ass jug cousin simple, wuz showed yonder hee-haw drive is me. Horse country inbred wirey, skanky kinfolk. Rattler, sittin' darn skanky fence, shot huntin'.</p> 
+            
+        </div>
+        <div id="tab4" class="tab_content">
+            <h2>This is Tab4</h2>
+            <a href="#"> <img src="estebanmunoz_thumb.gif" alt="" /></a>
+
+            <h3><a href="http://www.wenboxz.com">更多精彩请点击</a></h3>
+            <p>Grandma been has bankrupt said hospitality fence everlastin' wrestlin' rodeo redblooded chitlins marshal. Boobtube soap her hootch lordy cow, rattler. </p>
+            
+            <p>Rottgut havin' ignorant go, hee-haw shiney jail fetched hillbilly havin' cipherin'. Bacon no cowpoke tobaccee horse water rightly trailer tools git hillbilly. </p>
+            
+            <p>Jezebel had whiskey snakeoil, askin' weren't, skanky aunt townfolk fetched. Fit tractor, them broke askin', them havin' rattler fell heffer, been tax-collectors buffalo. Quarrel confounded fence wagon trailer, moonshine wuz, city-slickers fixin' cow. </p>
+        </div>
+    </div>
+</div>
+
+
+
+
+</body>
+</html>

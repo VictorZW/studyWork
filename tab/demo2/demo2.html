@@ -1,0 +1,97 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<title>注重语义、结构、用户体验的Tab选项卡</title>
+<style type="text/css">
+/*全局样式，内外间距*/
+* {margin:0; padding:0;}
+body {background:#FFF; color:#333;}
+a {color:#333; text-decoration:none;}
+a:hover {text-decoration:underline;}
+/*无序列表列表项的样式*/
+ul, li {list-style:none;}
+/*放置选项卡和内容的外边界div的样式*/
+.wrap {width:700px; margin:0 auto; line-height:25px; font-size:12px;}
+/*大标题的样式*/
+h1 {text-align:center; margin-top:50px;}
+/*放置内容的内边界的div的样式*/
+#hotnews {position:relative; width:350px; margin: 0 auto; height:150px; margin-top:50px;}
+/*小标题，即选项卡标签的样式*/
+#hotnews h2 {display:block; float:left; width:50px; margin-right:2px; font-size:12px; font-weight:normal; text-align:center; cursor:pointer;}
+
+#hotnews .title_normal {background:#CCC;}
+#hotnews .title_current {background:#C2130E; color:#FFF;}
+/*各无序列表的样式*/
+#hotnews ul {position:absolute; left:0px; top:25px; width:300px; padding:8px 0 0 5px; border-top:3px solid #C2130E; font-size:14px
+}
+/*底部署名的样式*/
+.footer {margin-top:50px; border-top:#CCC dashed 1px; text-align:right;}
+</style>
+
+<!-- 通过js控制各选项的显示 -->
+<script type="text/javascript" src="jquery.js"></script>
+<script type="text/javascript">
+$(function(){
+var onum=0;//用于控制默认打开的标签
+//显示内容区的所有无序列表数组
+var Ds = $("#hotnews ul");
+//要显示为选项卡的二级标题数组
+var Ts= $("#hotnews h2");
+for(var i=0; i<Ds.length;i++){
+	if(i==onum){
+		Ds[i].style.display="block";
+		Ts[i].className = "title_current";
+	}else{
+		Ds[i].style.display="none";
+		Ts[i].className = "title_normal";
+	}
+	Ts[i].value=i;
+	Ts[i].onmouseover=function(){
+		if(onum==this.value){
+			return false;
+		};
+		Ts[onum].className="title_normal";
+		Ts[this.value].className="title_current";
+		Ds[onum].style.display="none";
+		Ds[this.value].style.display="block";
+		onum=this.value;
+		}//end onmouseover event
+}
+})
+</script>
+</head>
+<body>
+<div class="wrap">
+<h1>注重结构、语义、用户体验的Tab选项卡</h1>
+<div id="hotnews">
+<h2>新闻</h2>
+<ul>
+<li><a href="#">[新闻]轿车逆行撞死斑马线上7岁后逃逸</a></li>
+<li><a href="#">[新闻]乌鲁木齐警方抓捕疑犯遭暴力</a></li>
+<li><a href="#">[新闻]数据表对拷程序Delphi控件版</a></li>
+</ul>
+<h2>火炬</h2>
+<ul>
+<li><a href="#">[火炬]轿车逆行撞死斑马线上7岁学后逃逸</a></li>
+<li><a href="#">[火炬]BMP位图按钮的VC++实现</a></li>
+<li><a href="#">[火炬]河南驻马店警方配备宝马警车</a></li>
+</ul>
+<h2>图片</h2>
+<ul>
+<li><a href="#">BMP位图按钮的VC++实现</a></li>
+<li><a href="#">[图片]网友创作歌曲"人民心疼你"总理敬意</a></li>
+<li><a href="#">计算机机房管理系统Delphi源代码</a></li>
+</ul>
+<h2>锐点</h2>
+<ul>
+<li><a href="#">计算机机房管理系统Delphi源代码</a></li>
+<li><a href="#">[锐点]阿拉伯媒体称赖斯正与卡扎菲长子热恋</a></li>
+<li><a href="#">BMP位图按钮的VC++实现</a></li>
+</ul>
+</div>
+<div class="footer">Power By <a href="https://www.rxblog.xyz">容休博客</a><br/>
+2014.09.10</div>
+</div>
+</body>
+</html>
