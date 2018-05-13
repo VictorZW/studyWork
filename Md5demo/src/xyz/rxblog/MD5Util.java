@@ -1,37 +1,37 @@
-package com.md5;
+package xyz.rxblog;
+
+
+import org.apache.commons.lang3.StringUtils;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
-import org.apache.commons.lang.StringUtils;
-
-
 /**
- * ¹¦ÄÜ£ºMD5¼ÓÃÜ¹¤¾ßÀà
- * ËµÃ÷£º×ªÔØÇë×¢Ã÷£ºÎÄ²¨¤ÎĞ¡Õ¾---http://www.wenboxz.com
+ * åŠŸèƒ½ï¼šMD5åŠ å¯†å·¥å…·ç±»
+ * è¯´æ˜ï¼šè½¬è½½è¯·æ³¨æ˜ï¼šå®¹ä¼‘åšå®¢---https://www.rxblog.xyz
  */
 public class MD5Util {
 	/**
-	 * 1.¶ÔÎÄ±¾½øĞĞ32Î»Ğ¡Ğ´MD5¼ÓÃÜ
-	 * @param plainText Òª½øĞĞ¼ÓÃÜµÄÎÄ±¾
-	 * @return ¼ÓÃÜºóµÄÄÚÈİ
+	 * 1.å¯¹æ–‡æœ¬è¿›è¡Œ32ä½å°å†™MD5åŠ å¯†
+	 * @param plainText è¦è¿›è¡ŒåŠ å¯†çš„æ–‡æœ¬
+	 * @return åŠ å¯†åçš„å†…å®¹
 	 */
 	public static String textToMD5L32(String plainText){
 		String result = null;
-		//Ê×ÏÈÅĞ¶ÏÊÇ·ñÎª¿Õ
+		//é¦–å…ˆåˆ¤æ–­æ˜¯å¦ä¸ºç©º
 		if(StringUtils.isBlank(plainText)){
 			return null;
 		}
 		try{
-			//Ê×ÏÈ½øĞĞÊµÀı»¯ºÍ³õÊ¼»¯
+			//é¦–å…ˆè¿›è¡Œå®ä¾‹åŒ–å’Œåˆå§‹åŒ–
 			MessageDigest md = MessageDigest.getInstance("MD5");
-			//µÃµ½Ò»¸ö²Ù×÷ÏµÍ³Ä¬ÈÏµÄ×Ö½Ú±àÂë¸ñÊ½µÄ×Ö½ÚÊı×é
+			//å¾—åˆ°ä¸€ä¸ªæ“ä½œç³»ç»Ÿé»˜è®¤çš„å­—èŠ‚ç¼–ç æ ¼å¼çš„å­—èŠ‚æ•°ç»„
 			byte[] btInput = plainText.getBytes();
-			//¶ÔµÃµ½µÄ×Ö½ÚÊı×é½øĞĞ´¦Àí
+			//å¯¹å¾—åˆ°çš„å­—èŠ‚æ•°ç»„è¿›è¡Œå¤„ç†
 			md.update(btInput);
-			//½øĞĞ¹şÏ£¼ÆËã²¢·µ»Ø½á¹û
+			//è¿›è¡Œå“ˆå¸Œè®¡ç®—å¹¶è¿”å›ç»“æœ
 			byte[] btResult = md.digest();
-			//½øĞĞ¹şÏ£¼ÆËãºóµÃµ½µÄÊı¾İµÄ³¤¶È
+			//è¿›è¡Œå“ˆå¸Œè®¡ç®—åå¾—åˆ°çš„æ•°æ®çš„é•¿åº¦
 			StringBuffer sb = new StringBuffer();
 			for(byte b : btResult){
 				int bt = b&0xff;
@@ -46,11 +46,11 @@ public class MD5Util {
 		}
 		return result;
 	}
-	
+
 	/**
-	 * 2.¶ÔÎÄ±¾½øĞĞ32Î»MD5´óĞ´¼ÓÃÜ
-	 * @param plainText Òª½øĞĞ¼ÓÃÜµÄÎÄ±¾
-	 * @return ¼ÓÃÜºóµÄÄÚÈİ
+	 * 2.å¯¹æ–‡æœ¬è¿›è¡Œ32ä½MD5å¤§å†™åŠ å¯†
+	 * @param plainText è¦è¿›è¡ŒåŠ å¯†çš„æ–‡æœ¬
+	 * @return åŠ å¯†åçš„å†…å®¹
 	 */
 	public static String textToMD5U32(String plainText){
 		if(StringUtils.isBlank(plainText)){
@@ -59,10 +59,10 @@ public class MD5Util {
 		String result = textToMD5L32(plainText);
 		return result.toUpperCase();
 	}
-	
+
 	/**
-	 * 3.¶ÔÎÄ±¾½øĞĞ16Î»MD5Ğ¡Ğ´¼ÓÃÜ
-	 * @param plainText ĞèÒª½øĞĞ¼ÓÃÜµÄÎÄ±¾
+	 * 3.å¯¹æ–‡æœ¬è¿›è¡Œ16ä½MD5å°å†™åŠ å¯†
+	 * @param plainText éœ€è¦è¿›è¡ŒåŠ å¯†çš„æ–‡æœ¬
 	 */
 	public static String textToMD5L16(String plainText){
 		if(StringUtils.isBlank(plainText)){
@@ -71,10 +71,10 @@ public class MD5Util {
 		String result = textToMD5L32(plainText);
 		return result.substring(8,24);
 	}
-	
+
 	/**
-	 * 4.¶ÔÎÄ±¾½øĞĞ16Î»MD5´óĞ´¼ÓÃÜ
-	 * @param plainText ĞèÒª½øĞĞ¼ÓÃÜµÄÎÄ±¾
+	 * 4.å¯¹æ–‡æœ¬è¿›è¡Œ16ä½MD5å¤§å†™åŠ å¯†
+	 * @param plainText éœ€è¦è¿›è¡ŒåŠ å¯†çš„æ–‡æœ¬
 	 * @return
 	 */
 	public static String textToMD5U16(String plainText){
@@ -84,7 +84,7 @@ public class MD5Util {
 		String result = textToMD5L32(plainText);
 		return result.toUpperCase().substring(8, 24);
 	}
-	
+
 	public static void main(String[] args) {
 		System.out.println(textToMD5U16("0"));
 	}
