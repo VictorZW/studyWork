@@ -1,0 +1,204 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cdsoft.platform.mapper.ResourceMapper">
+	<resultMap id="systemResource" type="com.cdsoft.platform.entity.Resource" >
+    <id column="ID" property="id" jdbcType="VARCHAR" />
+    <result column="NAME" property="name" jdbcType="VARCHAR" />
+    <result column="URL" property="url" jdbcType="VARCHAR" />
+    <result column="MENU_CODE" property="menuCode" jdbcType="VARCHAR" />
+    <result column="TYPE" property="type" jdbcType="VARCHAR" />
+    <result column="PERMISSION" property="permission" jdbcType="VARCHAR" />
+    <result column="SHOW_IN_FRONT" property="showInFront" jdbcType="VARCHAR" />
+    <result column="PIC_NAME" property="picName" jdbcType="VARCHAR" />
+    <result column="RES_CODE" property="resCode" jdbcType="VARCHAR" />
+    <result column="RES_TYPE" property="resType" jdbcType="VARCHAR" />
+  </resultMap>
+  <select id="findFrontList" parameterType="map" resultType="map">
+  select *
+      from SYSTEM_MENU
+     where menu_code in
+           (select menu_code
+              from SYSTEM_ROLE_MENU r
+             where r.role_code in
+                   (select role_code
+                      from SYSTEM_ROLE_USER
+                     where user_code =
+                             #{usercode,jdbcType=VARCHAR}))
+                            and status = '0'
+     order by order_id
+	</select>
+	<select id="queryPage" parameterType="map" resultMap="systemResource">
+       select * from(
+            select rownum rn,b.* from (
+                select 	r.*
+                        from SYSTEM_RESOURCE r 
+                        <where>
+                        <if test="name != null and name != ''">
+               			  r.name like '%'||#{name}||'%'</if>
+               			  
+                       <if test="menuCode != null and menuCode != ''">
+               			 and r.MENU_CODE in  <foreach collection="menuCode" item="menuCode" index="index" open="(" separator="," close=")">
+	  								#{menuCode}
+  						</foreach> 
+               			  </if> 
+                        <if test="permission != null and permission != ''">
+               			 and r.permission like '%'||#{permission}||'%'</if>
+                 </where>  )b
+            where rownum &lt;= ${pageEnd})
+        where rn &gt;= ${pageStart}
+     </select>
+    <select id="queryPageCount" parameterType="map" resultType="long">
+        select count(1) from SYSTEM_RESOURCE
+    </select>
+ <select id="selectResource" resultMap="systemResource">
+  select   
+  <include refid="Base_Column_List" />
+  from SYSTEM_RESOURCE
+ </select>
+  <sql id="Base_Column_List" >
+    ID, NAME, URL, MENU_CODE, TYPE, PERMISSION, SHOW_IN_FRONT, PIC_NAME, RES_CODE, RES_TYPE
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="systemResource" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from SYSTEM_RESOURCE
+    where ID = #{id,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from SYSTEM_RESOURCE
+    where ID = #{id,jdbcType=VARCHAR}
+  </delete>
+   <delete id="delete" parameterType="java.lang.String" >
+    delete from SYSTEM_RESOURCE  where ID in
+    <foreach collection="list" item="item" index="index" open="(" separator="," close=")">
+	  	#{item}
+  	</foreach>
+  </delete>
+  <insert id="insert" parameterType="com.cdsoft.platform.entity.Resource" >
+    insert into SYSTEM_RESOURCE (ID, NAME, URL, 
+      MENU_CODE, TYPE, PERMISSION, 
+      SHOW_IN_FRONT, PIC_NAME, RES_CODE, 
+      RES_TYPE)
+    values (sys_guid(), #{name,jdbcType=VARCHAR}, #{url,jdbcType=VARCHAR}, 
+      #{menuCode,jdbcType=VARCHAR}, #{type,jdbcType=VARCHAR}, #{permission,jdbcType=VARCHAR}, 
+      #{showInFront,jdbcType=VARCHAR}, #{picName,jdbcType=VARCHAR}, #{resCode,jdbcType=VARCHAR}, 
+      #{resType,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.cdsoft.platform.entity.Resource" >
+    insert into SYSTEM_RESOURCE
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        ID,
+      </if>
+      <if test="name != null" >
+        NAME,
+      </if>
+      <if test="url != null" >
+        URL,
+      </if>
+      <if test="menuCode != null" >
+        MENU_CODE,
+      </if>
+      <if test="type != null" >
+        TYPE,
+      </if>
+      <if test="permission != null" >
+        PERMISSION,
+      </if>
+      <if test="showInFront != null" >
+        SHOW_IN_FRONT,
+      </if>
+      <if test="picName != null" >
+        PIC_NAME,
+      </if>
+      <if test="resCode != null" >
+        RES_CODE,
+      </if>
+      <if test="resType != null" >
+        RES_TYPE,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=VARCHAR},
+      </if>
+      <if test="name != null" >
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="url != null" >
+        #{url,jdbcType=VARCHAR},
+      </if>
+      <if test="menuCode != null" >
+        #{menuCode,jdbcType=VARCHAR},
+      </if>
+      <if test="type != null" >
+        #{type,jdbcType=VARCHAR},
+      </if>
+      <if test="permission != null" >
+        #{permission,jdbcType=VARCHAR},
+      </if>
+      <if test="showInFront != null" >
+        #{showInFront,jdbcType=VARCHAR},
+      </if>
+      <if test="picName != null" >
+        #{picName,jdbcType=VARCHAR},
+      </if>
+      <if test="resCode != null" >
+        #{resCode,jdbcType=VARCHAR},
+      </if>
+      <if test="resType != null" >
+        #{resType,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.cdsoft.platform.entity.Resource" >
+    update SYSTEM_RESOURCE
+    <set >
+      <if test="name != null" >
+        NAME = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="url != null" >
+        URL = #{url,jdbcType=VARCHAR},
+      </if>
+      <if test="menuCode != null" >
+        MENU_CODE = #{menuCode,jdbcType=VARCHAR},
+      </if>
+      <if test="type != null" >
+        TYPE = #{type,jdbcType=VARCHAR},
+      </if>
+      <if test="permission != null" >
+        PERMISSION = #{permission,jdbcType=VARCHAR},
+      </if>
+      <if test="showInFront != null" >
+        SHOW_IN_FRONT = #{showInFront,jdbcType=VARCHAR},
+      </if>
+      <if test="picName != null" >
+        PIC_NAME = #{picName,jdbcType=VARCHAR},
+      </if>
+      <if test="resCode != null" >
+        RES_CODE = #{resCode,jdbcType=VARCHAR},
+      </if>
+      <if test="resType != null" >
+        RES_TYPE = #{resType,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where ID = #{id,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.cdsoft.platform.entity.Resource" >
+    update SYSTEM_RESOURCE
+    set NAME = #{name,jdbcType=VARCHAR},
+      URL = #{url,jdbcType=VARCHAR},
+      MENU_CODE = #{menuCode,jdbcType=VARCHAR},
+      TYPE = #{type,jdbcType=VARCHAR},
+      PERMISSION = #{permission,jdbcType=VARCHAR},
+      SHOW_IN_FRONT = #{showInFront,jdbcType=VARCHAR},
+      PIC_NAME = #{picName,jdbcType=VARCHAR},
+      RES_CODE = #{resCode,jdbcType=VARCHAR},
+      RES_TYPE = #{resType,jdbcType=VARCHAR}
+    where ID = #{id,jdbcType=VARCHAR}
+  </update>
+  <select id="checkName" parameterType="java.lang.String" resultType="int">
+  		SELECT COUNT(*) FROM SYSTEM_RESOURCE WHERE NAME = #{name,jdbcType=VARCHAR}
+  	</select>
+</mapper>

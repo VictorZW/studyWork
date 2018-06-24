@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cdsoft.platform.mapper.MenusMapper">
+ 	<resultMap id="systemMenu" type="com.cdsoft.platform.entity.Menu" >
+		<id column="ID" property="id" jdbcType="VARCHAR" />
+		<result column="NAME" property="name" jdbcType="VARCHAR" />
+		<result column="URL" property="url" jdbcType="VARCHAR" />
+		<result column="PARENT_ID" property="parentId" jdbcType="VARCHAR" />
+		<result column="TYPE" property="type" jdbcType="VARCHAR" />
+		<result column="STATUS" property="status" jdbcType="VARCHAR" />
+		<result column="PERMISSION" property="permission" jdbcType="VARCHAR" />
+		<result column="IMG_URL" property="imgUrl" jdbcType="VARCHAR" />
+		<result column="ORDER_ID" property="orderId" jdbcType="VARCHAR" />
+		<result column="MENU_CODE" property="menuCode" jdbcType="VARCHAR" />
+		<result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
+    	<result column="CREATE_TIME" property="createTime" jdbcType="DATE" />
+    	<result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
+    	<result column="UPDATE_TIME" property="updateTime" jdbcType="DATE" />
+	</resultMap>
+	<select id="selMenuTree" resultMap="systemMenu">
+		select 
+			m.menu_code,
+			m.name,
+			m.parent_id, 
+			m.url,
+			m.order_id
+		 from SYSTEM_MENU m 
+	</select>
+	
+	<update id="updateMenuTreeChild" parameterType="map">
+		UPDATE SYSTEM_MENU SET 
+		<if test="menuName != null and menuName != ''">
+		NAME = #{menuName},
+		</if>
+		<if test="menuUrl != null and menuUrl != ''">
+		URL = #{menuUrl},
+		</if>
+		<if test="orderId != null and orderId != ''">
+		ORDER_ID = #{orderId},
+		</if>
+		<if test="updateTime != null and updateTime != ''">
+		UPDATE_TIME = #{updateTime}
+		</if>
+		WHERE menu_code = #{menuId}
+	</update>
+	
+	<insert id="insertParent" parameterType="map">
+		insert into SYSTEM_MENU(id,name,parent_id,create_time,create_user,status,menu_code)
+		values(sys_guid(),'新增菜单','0',TO_DATE(#{dateString},'yyyy-MM-dd hh24:mi:ss'),#{createUser},'0',concat('M',replace(lpad(seq_SYSTEM_MENU_menucode.nextval,7,'0'),'','0')))
+	</insert>
+	
+	<select id="selNewParent" parameterType="map" resultMap="systemMenu">
+		select a.menu_code,a.parent_id from SYSTEM_MENU a where create_time = to_date(#{dateString}, 'yyyy-MM-dd hh24:mi:ss')
+	</select>
+	
+	<insert id="insertChild" parameterType="map">
+		insert into SYSTEM_MENU(id,name,parent_id,create_time,create_user,status,menu_code)
+		values(sys_guid(),'新增菜单',#{pid},TO_DATE(#{dateString},'yyyy-MM-dd hh24:mi:ss'),#{createUser},'0',concat('M',replace(lpad(seq_SYSTEM_MENU_menucode.nextval,7,'0'),'','0')))
+	</insert>
+	
+	<delete id="deleteMenuParent" parameterType="map">
+		delete from SYSTEM_MENU where menu_code = #{menuId}
+	</delete>
+	
+	<delete id="deleteMenuChild" parameterType="map">
+		delete from SYSTEM_MENU where parent_id = #{menuId}
+	</delete>
+	
+	<select id="selectMenuChild" parameterType="map" resultType="int">
+		select count(*) from SYSTEM_MENU where parent_id = #{menuId}
+	</select>
+	<select id="selMenu" resultMap="systemMenu">
+		select	m.MENU_CODE,m."NAME" from SYSTEM_MENU m where m.PARENT_ID != '0' and m.MENU_CODE !='M0000002'
+	</select>
+	<select id="selectMenu" resultMap="systemMenu">
+		select	m.MENU_CODE,m.name from SYSTEM_MENU m,SYSTEM_RESOURCE r where r.MENU_CODE = m.MENU_CODE
+	</select>
+	<select id="selectMenuCode" parameterType="java.lang.String" resultMap="systemMenu">
+		select	m.MENU_CODE from SYSTEM_MENU m<where>
+                        <if test="name != null and name != ''">
+               			  m.NAME like '%'||#{name}||'%'</if>
+               			  </where>
+	</select>
+</mapper>

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.cdsoft.mcm.test.mapper.TestMapper">
+    <select id="test" parameterType="map" resultType="map">
+	SELECT to_char(MONTH_WH, 'YYYY-MM') AS monthwh,
+	round(SUM(H.REC_AMOUNT) / 10000.0, 3) AS sumREC_AMOUNT,
+	round(SUM(H.BOI_AMOUNT) / 10000.0, 3) AS sumBOI_AMOUNT,
+	round(SUM(H.REC_MAR), 3) AS sumREC_MAR,
+	round(SUM(H.BOI_MAR), 3) AS sumBOI_MAR,
+	round(SUM(H.REC_QNETAR), 3) AS sumREC_QNETAR,
+	round(SUM(H.Boi_Qnetar), 3) AS sumBOI_QNETAR,
+	round(SUM(H.REC_PRICE), 3) AS sumREC_PRICE,
+	round(SUM(H.BOI_PRICE), 3) AS sumBOI_PRICE
+	FROM apps.HDPI_FL_MON_LHKHZBWH H
+	WHERE 1 = 1
+	and organization_id = 131
+	and to_char(MONTH_WH, 'YYYY-MM') &gt;= #{startDate}
+	AND to_char(MONTH_WH, 'YYYY-MM') &lt;= #{endDate}
+	GROUP BY to_char(MONTH_WH, 'YYYY-MM')
+	ORDER BY 1 asc
+    </select>
+</mapper>

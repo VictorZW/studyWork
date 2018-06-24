@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.cdsoft.platform.mapper.RoleResourceMapper" >
+  <resultMap id="BaseResultMap" type="com.cdsoft.platform.entity.RoleResource" >
+    <result column="ID" property="id" jdbcType="VARCHAR" />
+    <result column="STATUS" property="status" jdbcType="VARCHAR" />
+    <result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
+    <result column="CREATE_TIME" property="createTime" jdbcType="DATE" />
+    <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
+    <result column="UPDATE_TIME" property="updateTime" jdbcType="DATE" />
+    <result column="ROLE_CODE" property="roleCode" jdbcType="VARCHAR" />
+    <result column="RES_CODE" property="resCode" jdbcType="VARCHAR" />
+  </resultMap>
+  <select id="selectResCode" parameterType="java.lang.String" resultType="map">
+  	select res_code id from SYSTEM_ROLE_RESOURCE where role_code=#{rolecode}
+  </select>
+  <delete id="delete" parameterType="java.lang.String">
+  	delete SYSTEM_ROLE_RESOURCE where role_code=#{roleCode}
+  </delete>
+  <sql id="Base_Column_List" >
+    ID, STATUS, CREATE_USER, CREATE_TIME, UPDATE_USER, UPDATE_TIME, ROLE_CODE, RES_CODE
+  </sql>
+  <insert id="insert" parameterType="com.cdsoft.platform.entity.RoleResource" >
+    insert into SYSTEM_ROLE_RESOURCE (id, STATUS, create_USER, 
+      create_time, update_USER, update_time, 
+      role_code, res_code)
+    values (sys_guid(), #{status,jdbcType=VARCHAR}, #{createUser,jdbcType=VARCHAR}, 
+      #{createTime,jdbcType=DATE}, #{updateUser,jdbcType=VARCHAR}, #{updateTime,jdbcType=DATE}, 
+      #{roleCode,jdbcType=VARCHAR}, #{resCode,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.cdsoft.platform.entity.RoleResource" >
+    insert into SYSTEM_ROLE_RESOURCE
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        ID,
+      </if>
+      <if test="status != null" >
+        STATUS,
+      </if>
+      <if test="createUser != null" >
+        CREATE_USER,
+      </if>
+      <if test="createTime != null" >
+        CREATE_TIME,
+      </if>
+      <if test="updateUser != null" >
+        UPDATE_USER,
+      </if>
+      <if test="updateTime != null" >
+        UPDATE_TIME,
+      </if>
+      <if test="roleCode != null" >
+        ROLE_CODE,
+      </if>
+      <if test="resCode != null" >
+        RES_CODE,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=VARCHAR},
+      </if>
+      <if test="createUser != null" >
+        #{createUser,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=DATE},
+      </if>
+      <if test="updateUser != null" >
+        #{updateUser,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=DATE},
+      </if>
+      <if test="roleCode != null" >
+        #{roleCode,jdbcType=VARCHAR},
+      </if>
+      <if test="resCode != null" >
+        #{resCode,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+</mapper>

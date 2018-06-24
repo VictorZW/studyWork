@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cdsoft.platform.mapper.SafeActivityMapper">
+
+	<select id="getDictForPno" parameterType="java.lang.String" resultType="map">
+		SELECT ID, VALUE, PARENT_NO, NOTE, NO FROM SYSTEM_DICT WHERE PARENT_NO = #{PNO}
+	</select>
+	<select id="queryPagesFileList" parameterType="map" resultType="map">
+		SELECT * FROM 
+		       (SELECT A.*, ROWNUM RN FROM 
+		              (SELECT * FROM (	
+							SELECT F_ID,
+						       F_NAME,
+						       F_DEC,
+						       F_SIZE,
+						       (SELECT VALUE FROM SYSTEM_DICT WHERE no=F_TYPE) AS F_TYPE,
+						       to_char(CREATETIME,'yyyy-mm-dd') as  CREATETIME,
+						       UPDATETIME,
+						       F_STATUS,
+						       IS_DEL,
+						       F_URL,
+						       CATEGORY
+						  FROM FD_F_FILE T WHERE T.IS_DEL=#{ISDEL} )
+						<where>
+							1=1
+							<if test="FILENAME !=null and FILENAME !=''"> AND F_NAME LIKE #{FILENAME} </if>
+							<if test="FILESTATUS !=null and FILESTATUS !=''"> AND F_STATUS=#{FILESTATUS}</if>
+							<if test="STARTDATE !=null and STARTDATE !='' and ENDDATE !=null and ENDDATE !=''"> AND to_date(CREATETIME,'yyyy-MM-dd')  BETWEEN to_date(#{STARTDATE},'yyyy-MM-dd')  AND to_date(#{ENDDATE},'yyyy-mm-dd')+1  </if>
+						</where>
+					  ORDER BY #{sort} ${order} ) A
+		         WHERE ROWNUM &lt;= ${pageEnd})
+		 WHERE RN &gt;= ${pageStart}
+	</select>
+	<select id="queryPagesFileCount" parameterType="map" resultType="long">
+	SELECT count(*) FROM (
+		SELECT F_ID,
+		F_NAME,
+		F_DEC,
+		F_SIZE,
+		(SELECT VALUE FROM SYSTEM_DICT WHERE no=F_TYPE) AS F_TYPE,
+		CREATETIME,
+		UPDATETIME,
+		F_STATUS,
+		IS_DEL,
+		F_URL,
+		CATEGORY
+		FROM FD_F_FILE T WHERE T.IS_DEL=#{ISDEL} )
+		<where>
+			1=1
+			<if test="FILENAME !=null and FILENAME !=''"> AND F_NAME LIKE #{FILENAME} </if>
+			<if test="FILESTATUS !=null and FILESTATUS !=''"> AND F_STATUS=#{FILESTATUS}</if>
+			<if test="STARTDATE !=null and STARTDATE !='' and ENDDATE !=null and ENDDATE !=''"> AND CREATETIME BETWEEN to_date(#{STARTDATE},'yyyy-MM-dd')  AND to_date(#{ENDDATE},'yyyy-mm-dd')+1  </if>
+		</where>
+	</select>
+	<select id="getFileDetail" parameterType="java.lang.String" resultType="map">
+		SELECT F_ID,
+		       F_NAME,
+		       F_DEC,
+		       F_SIZE,
+		       F_TYPE,
+		       CREATETIME,
+		       UPDATETIME,
+		       F_STATUS,
+		       IS_DEL,
+		       F_URL,
+		       CATEGORY
+		  FROM FD_F_FILE
+		  WHERE F_ID=#{fileID}
+	</select>
+</mapper>

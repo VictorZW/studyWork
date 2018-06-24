@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cdsoft.platform.mapper.LogMapper">
+	
+	<select id="queryPage" parameterType="map" resultType="map">
+	SELECT * FROM
+		(SELECT ROWNUM RN, E.* FROM(
+			SELECT A.ID,
+       A.USER_CODE usercode,
+       TO_CHAR(A.LOG_TIME,'yyyy-MM-dd hh24:mm:ss') LOGTIME,
+       A.LOG_TYPE logtype,
+       A.LOG_INFO loginfo,
+       A.LOG_IP logip,
+       (select u.user_Name from SYSTEM_USER u where u.user_code = a.user_code) userName
+       FROM SYSTEM_LOGS A
+       where 1=1  
+	   <if test="logTime != null and logTime != ''"> AND a.log_TIME LIKE TO_DATE(#{logTime},'yyyy-MM-dd')</if>
+ 	   order by a.log_time desc)E 
+    WHERE ROWNUM &lt;= ${pageEnd}
+    <if test="userName != null and userName != ''"> AND e.userName LIKE '%'||#{userName}||'%'</if> )
+	WHERE RN &gt;= ${pageStart}
+    </select>
+    <select id="queryPageCount" resultType="long">
+ 		SELECT 
+			count(*)
+			FROM SYSTEM_LOGS T,SYSTEM_USER U WHERE 1=1 AND T.USER_CODE=U.USER_CODE
+	    <if test="logTime != null and logTime != ''"> AND T.LOG_TIME LIKE TO_DATE(#{logTime},'yyyy-MM-dd')</if>
+	    <if test="userName != null and userName != ''"> AND U.USER_NAME LIKE '%'||#{userName}||'%' </if>	
+    </select>
+  
+  	<insert id="insertLog" parameterType="com.cdsoft.platform.entity.Log">
+	insert into SYSTEM_LOGS(id,user_code,LOG_time,log_type,LOG_INFO,LOG_IP)
+		values(SEQ_SYSTEM_LOGS.NEXTVAL,#{userCode},#{logTime},#{logType},#{logInfo},#{logIp})
+	</insert>
+</mapper>

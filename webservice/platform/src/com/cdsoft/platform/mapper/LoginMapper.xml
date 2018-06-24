@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cdsoft.platform.mapper.LoginMapper">
+	
+	
+	<!-- 查询用户是否存在 -->
+	<select id="checkUserExits" resultType="map" parameterType="map">
+		select u.user_code,u.user_name,o.org_code from system_user u
+		left join system_user_org uo
+		on u.user_code = uo.user_code
+		left join system_org o
+		on o.org_code = uo.org_code
+ 		where u.user_code = #{USERCODE} and u.password = #{PASSWORD} and u.del_flag = '0'
+	</select>
+	<select id="getVersionInfo" resultType="map">
+		SELECT VERSION,URL,VERSIONCODE  FROM(SELECT VERSION,URL,VERSIONCODE FROM system_apk_version  ORDER BY UPDATE_DATE DESC) WHERE ROWNUM = '1'
+	</select>
+	<select id="selectRoleByCode" resultType="map" parameterType="map">
+		SELECT A.user_code ID, A.user_name NAME, C.ROLE_CODE 
+		  FROM system_user A
+		  LEFT JOIN system_role_user B
+		    ON A.USER_CODE = B.USER_CODE
+      LEFT JOIN SYSTEM_ROLE C
+        ON B.ROLE_CODE = C.ROLE_CODE
+     WHERE C.ROLE_CODE = #{ROLECODE}
+       AND A.STATUS = '1'
+	</select>
+	<select id="selectAllUser" resultType="map">
+		select a.user_name  name ,a.user_code id from system_user a,system_role_user b 
+		where a.status = '1' and a.user_code = b.user_code and b.role_code in ('R0000002','R0000006') 
+		order by a.user_code
+	</select>
+</mapper>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cdsoft.platform.mapper.RoleMapper">
+	<resultMap id="systemRole" type="com.cdsoft.platform.entity.Role" >
+		<id column="ID" property="id" jdbcType="VARCHAR" />
+		<result column="ROLE_CODE" property="roleCode" jdbcType="VARCHAR" />
+		<result column="ROLE_NAME" property="roleName" jdbcType="VARCHAR" />
+		<result column="DESCRIBE" property="describe" jdbcType="VARCHAR" />
+		<result column="DEL_FLAG" property="delFlag" jdbcType="VARCHAR" />
+		<result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
+    	<result column="CREATE_TIME" property="createTime" jdbcType="DATE" />
+    	<result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
+    	<result column="UPDATE_TIME" property="updateTime" jdbcType="DATE" />
+	</resultMap>
+	<select id="queryPage" parameterType="map" resultMap="systemRole">
+        select * from(
+            select rownum rn,b.* from (
+                select 	r.id,
+                		r.role_code,
+                        r.role_name,
+                        r.describe 
+                        from SYSTEM_ROLE r 
+                        <where>
+                          r.del_flag = '0'
+                        <if test="roleName != null and roleName != ''">
+                and r.role_name like '%'||#{roleName}||'%'</if></where>)b
+            where rownum &lt;= ${pageEnd})
+        where rn &gt;= ${pageStart}
+    </select>
+    <select id="queryPageCount" parameterType="map" resultType="long">
+        select count(*) from (
+                        select * from(
+                select r.role_code,
+                        r.role_name,
+                        r.describe 
+                        from SYSTEM_ROLE r 
+                        <where>
+                        r.del_flag = '0'
+                        <if test="roleName != null and roleName != ''">
+                and role_name like '%'||#{roleName}||'%'</if>)
+                 </where>)        
+    </select>
+    
+    <delete id="delete" parameterType="java.lang.String" >
+    update SYSTEM_ROLE set del_flag = '1' where role_code in
+    <foreach collection="list" item="item" index="index" open="(" separator="," close=")">
+	  	#{item}
+  	</foreach>
+  </delete>
+
+  	<insert id="insert" parameterType="map">
+  		insert into SYSTEM_ROLE(id,role_code, role_name, describe,del_flag) values(sys_guid(),concat('R',replace(lpad(seq_SYSTEM_ROLE_roelcode.nextval,7,'0'),'','0')),#{roleName},#{describe},'0')
+  	</insert>
+  	<update id="update" parameterType="map">
+  		update SYSTEM_ROLE set
+  			role_name=#{roleName,jdbcType=VARCHAR},
+  			describe=#{describe,jdbcType=VARCHAR}
+  			where role_code=#{roleCode}
+  	</update>
+  	<select id="checkName" parameterType="java.lang.String" resultType="int">
+  		SELECT COUNT(*) FROM SYSTEM_ROLE WHERE role_Name=#{roleName}
+  	</select>
+  	
+  	<select id="queryRoleUserPage" parameterType="map" resultMap="com.cdsoft.platform.mapper.UserMapper.systemUser">
+        SELECT * FROM(
+            SELECT ROWNUM RN, G.*
+          	FROM (select u.user_code,u.user_name,u.job_num,u.cell_phone,o.org_name from SYSTEM_USER u
+				left join SYSTEM_USER_org uo
+				on u.user_code = uo.user_code
+				left join SYSTEM_ORG o
+				on o.org_code = uo.org_code
+				left join SYSTEM_ROLE_user ru
+				on u.user_code = ru.user_code
+				where ru.role_code = #{roleCode} and u.del_flag = '0')G
+            WHERE ROWNUM &lt;= ${pageEnd})
+        WHERE RN &gt;= ${pageStart}
+    </select>
+  	<select id="queryRoleUserCount" parameterType="map" resultType="long">
+        select count(*) from(
+           		select 1 from SYSTEM_USER u
+				left join SYSTEM_USER_org uo
+				on u.user_code = uo.user_code
+				left join SYSTEM_ORG o
+				on o.org_code = uo.org_code
+				left join SYSTEM_ROLE_user ru
+				on u.user_code = ru.user_code
+				where ru.role_code = #{roleCode})
+    </select>
+    
+    <insert id="insertRoleUsers" parameterType="map">
+    insert into SYSTEM_ROLE_user(id,role_code,user_code) values
+    (sys_guid(),#{roleCode,jdbcType=VARCHAR},#{userCode,jdbcType=VARCHAR})
+  </insert>
+  <select id="queryRoleUserNOTIN" parameterType="map" resultMap="com.cdsoft.platform.mapper.UserMapper.systemUser">
+  	select t.user_code, t.user_name from SYSTEM_USER t
+	 where t.user_code not in (
+	 	select u.user_code from SYSTEM_USER u
+	        left join SYSTEM_USER_org uo
+	        	on u.user_code = uo.user_code
+	        left join SYSTEM_ORG o
+	        	on o.org_code = uo.org_code
+	        left join SYSTEM_ROLE_user ru
+				on u.user_code = ru.user_code
+			<where> ru.role_code = #{roleCode,jdbcType=VARCHAR}) and del_flag = '0'
+           <if test="userCode != null and userCode != ''"> and t.user_code like '%'||#{userCode,jdbcType=VARCHAR}||'%'</if>       
+           <if test="userName != null and userName != ''"> and t.user_name like '%'||#{userName,jdbcType=VARCHAR}||'%'</if>
+           </where>
+  </select>
+  <delete id="deleteRoleUsers" parameterType="map">
+  	delete from SYSTEM_ROLE_user a
+ 		where a.role_code = #{roleCode,jdbcType=VARCHAR}
+                 and a.user_code = #{userCode,jdbcType=VARCHAR}
+  </delete>
+  <select id="selectMenuTree" resultMap="com.cdsoft.platform.mapper.MenusMapper.systemMenu">
+  	select * from SYSTEM_MENU where status='0'
+  </select>
+  <select id="selectRoleMenu" parameterType="java.lang.String" resultType="map">
+  	select m.menu_code id from SYSTEM_ROLE r,SYSTEM_MENU m,SYSTEM_ROLE_menu rm 
+  	where r.role_code = rm.role_code and m.menu_code = rm.menu_code and r.role_code = #{roleCode}
+  </select>
+  <delete id="deleteRoleMenu" parameterType="java.lang.String">
+  	delete from SYSTEM_ROLE_menu where role_code = #{roleCode}
+  </delete>
+  <insert id="addRoleMenu" parameterType="map">
+  	insert into SYSTEM_ROLE_menu(id,menu_code,role_code) values(sys_guid(),#{menuCode},#{roleCode})
+  </insert>
+  <select id="judge" parameterType="map" resultType="int">
+  	select count(*) from SYSTEM_ROLE_user where role_code = #{roleCode}
+  </select>
+  <select id="judgeRM" parameterType="map" resultType="int">
+  	select count(*) from SYSTEM_ROLE_menu where role_code = #{roleCode}
+  </select>
+</mapper>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

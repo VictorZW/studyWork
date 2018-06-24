@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cdsoft.platform.mapper.MessageMapper">
+	<resultMap id="systemMessage" type="com.cdsoft.platform.entity.Message" >
+    <id column="ID" property="id" jdbcType="VARCHAR" />
+    <result column="TITLE" property="title" jdbcType="VARCHAR" />
+    <result column="TYPE" property="type" jdbcType="VARCHAR" />
+    <result column="SENDER" property="sender" jdbcType="VARCHAR" />
+    <result column="RECIPIENT" property="recipient" jdbcType="VARCHAR" />
+    <result column="CONTENT" property="content" jdbcType="VARCHAR" />
+    <result column="TIMES" property="times" jdbcType="DATE" />
+    <result column="MESSAGE_CODE" property="messageCode" jdbcType="VARCHAR" />
+    <result column="UPDATE_TIME" property="updateTime" jdbcType="DATE" />
+    <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
+    <result column="CREATE_TIME" property="createTime" jdbcType="DATE" />
+    <result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
+  </resultMap>
+	<select id="queryMessage" parameterType="map" resultType="map">
+		SELECT * FROM
+		(SELECT ROWNUM RN, E.* FROM(
+			SELECT A.ID,A.MESSAGE_CODE MESSAGECODE,
+       A.TITLE,
+       A.TYPE,
+       A.SENDER,
+       A.RECIPIENT,
+       A.CONTENT,
+       TO_CHAR(A.TIMES,'yyyy-MM-dd hh24:mm:ss') TIMES
+       FROM SYSTEM_MESSAGE A
+	        <where>
+	              <if test="sender != null and sender != ''">A.sender LIKE '%'||#{sender}||'%'</if>
+	            <if test="type != null and type != ''"> AND A.type LIKE '%'||#{type}||'%'</if>
+	            <if test="time != null and time != ''"> AND A.times LIKE TO_DATE(#{time},'yyyy-MM-dd')</if>
+	        </where> )E 
+    	WHERE ROWNUM &lt;= ${pageEnd})
+	WHERE RN &gt;= ${pageStart}
+	 </select>
+	 <select id="queryMessageCount" resultType="long">
+	     SELECT COUNT(*) FROM( SELECT 
+ 				1
+			 FROM SYSTEM_MESSAGE A 
+	        <where>
+	       	 	<if test="sender != null and sender != ''">A.SENDER LIKE '%'||#{sender}||'%'</if>
+	            <if test="type != null and type != ''"> AND A.TYPE LIKE '%'||#{type}||'%'</if>
+	            <if test="time != null and time != ''"> AND A.TIMES LIKE TO_DATE(#{time},'yyyy-MM-dd')</if>
+	        </where>)
+      </select>
+     <insert id="addMessage" parameterType="map">
+        INSERT INTO SYSTEM_MESSAGE(ID,TITLE,TYPE,SENDER,RECIPIENT,CONTENT,TIMES,MESSAGE_CODE) 
+        VALUES(SYS_GUID(),#{title},#{type},#{sender},#{recipient},#{content},#{times},#{messageCode})
+     </insert>
+     <insert id="insert" parameterType="com.cdsoft.platform.entity.Message">
+        <!-- INSERT INTO SYSTEM_MESSAGE(ID,TITLE,TYPE,SENDER,RECIPIENT,CONTENT,TIMES,MESSAGE_CODE) 
+        VALUES(SYS_GUID(),#{title},#{type},#{sender},#{recipient},#{content},#{times},#{messageCode}) -->
+        INSERT INTO SYSTEM_MESSAGE(ID,TITLE,TYPE,SENDER,RECIPIENT,CONTENT,TIMES,MESSAGE_CODE) 
+        VALUES(SYS_GUID(),#{title,jdbcType=VARCHAR},#{type,jdbcType=VARCHAR},#{sender,jdbcType=VARCHAR},
+        #{recipient,jdbcType=VARCHAR},#{content,jdbcType=VARCHAR}
+	<choose>
+		<when test="times!=null and times!=''">
+		,TO_DATE(#{times},'yyyy-MM-dd hh24:mi:ss')
+		</when> 
+		<otherwise>,sysdate</otherwise>
+	</choose>
+	<choose>
+		<when test="messageCode!=null and messageCode!=''">
+		,#{messageCode}
+		</when> 
+		<otherwise>,concat('',seq_system_message_messageCode.nextval)</otherwise>
+	</choose>
+	)
+     </insert>
+     
+     
+  	 <update id="update" parameterType="com.cdsoft.platform.entity.Message">
+  	 	update SYSTEM_MESSAGE
+   	 <set >
+      <if test="title != null" >
+        TITLE = #{title,jdbcType=VARCHAR},
+      </if>
+      <if test="type != null" >
+        TYPE = #{type,jdbcType=VARCHAR},
+      </if>
+      <if test="sender != null" >
+        SENDER = #{sender,jdbcType=VARCHAR},
+      </if>
+      <if test="recipient != null" >
+        RECIPIENT = #{recipient,jdbcType=VARCHAR},
+      </if>
+      <if test="content != null" >
+        CONTENT = #{content,jdbcType=VARCHAR},
+      </if>
+      <if test="times != null" >
+        TIMES = #{times,jdbcType=VARCHAR},
+      </if>
+      <if test="messageCode != null" >
+        MESSAGE_CODE = #{messageCode,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null" >
+        UPDATE_TIME = #{updateTime,jdbcType=VARCHAR},
+      </if>
+      <if test="updateUser != null" >
+        UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime !=null">
+      	CREATE_TIME=#{createTime,jdbcType=VARCHAR},
+      </if>
+      <if test="createUser !=null">
+      	CREATE_USER=#{createUser,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where ID = #{id,jdbcType=VARCHAR} 
+  	 </update>
+  	 <delete id="delete" parameterType="java.lang.String" >
+    delete from SYSTEM_MESSAGE  where ID in
+    <foreach collection="list" item="item" index="index" open="(" separator="," close=")">
+	  	#{item}
+  	</foreach>
+  </delete>
+  	 
+</mapper>

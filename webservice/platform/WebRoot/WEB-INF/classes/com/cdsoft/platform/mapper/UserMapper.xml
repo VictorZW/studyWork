@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cdsoft.platform.mapper.UserMapper">
+	<resultMap id="systemUser" type="com.cdsoft.platform.entity.User" >
+		<id column="ID" property="id" jdbcType="VARCHAR" />
+		<result column="USER_CODE" property="userCode" jdbcType="VARCHAR" />
+		<result column="USER_NAME" property="userName" jdbcType="VARCHAR" />
+		<result column="PASSWORD" property="password" jdbcType="VARCHAR" />
+		<result column="DEL_FLAG" property="delFlag" jdbcType="VARCHAR" />
+		<result column="STATUS" property="status" jdbcType="VARCHAR" />
+		<result column="JOB_NUM" property="jobNum" jdbcType="VARCHAR" />
+		<result column="ICON" property="icon" jdbcType="VARCHAR" />
+		<result column="CELL_PHONE" property="cellPhone" jdbcType="VARCHAR" />
+		<result column="ORG_NAME" property="orgName" jdbcType="VARCHAR" />
+		<result column="ROLE_NAME" property="roleName" jdbcType="VARCHAR" />
+		<result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
+    	<result column="CREATE_TIME" property="createTime" jdbcType="DATE" />
+    	<result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
+    	<result column="UPDATE_TIME" property="updateTime" jdbcType="DATE" />
+	</resultMap>
+  <select id="selectUserByUserCode" parameterType="java.lang.String" resultMap="systemUser">
+  	select u.*,(select wm_concat(o.org_name)
+       from SYSTEM_ORG o,SYSTEM_USER_ORG uo where o.org_code = uo.org_code and u.user_code = uo.user_code) orgName  	
+  	from SYSTEM_USER u where u.USER_CODE=#{userCode}
+  </select>
+  <select id="selectRolesByUserCode" parameterType="java.lang.String" resultType="com.cdsoft.platform.entity.Role">
+    select *
+                    from SYSTEM_ROLE_USER
+                   where user_code = #{userCode}
+  </select>
+  <select id="selectResourceByUserCode" parameterType="java.lang.String" resultType="com.cdsoft.platform.entity.Resource">
+   select *
+   from SYSTEM_RESOURCE
+   where res_code in
+         (select res_code
+            from SYSTEM_ROLE_RESOURCE
+           where role_code in
+                 (select role_code from SYSTEM_ROLE_USER where user_code = #{usercode} ))
+  </select>
+  <select id="selectUserIsAdminOrCompany" resultType="int" parameterType="String">
+  	select count(*) from SYSTEM_ROLE_USER where user_code=#{userCode} and role_code in (select role_code from SYSTEM_ROLE where role_code='R0000009' or role_code='R0000010')
+  </select>
+  <select id="selectUserInfo" parameterType="map" resultType="com.cdsoft.platform.entity.User">
+  	select * from SYSTEM_USER where status='1' and user_code=#{userName,jdbcType=VARCHAR} and password=#{password}
+  </select>
+  <!-- 查询所有人员 -->
+  <select id="queryPage" parameterType="map" resultMap="systemUser">
+	select * from
+		(select rownum rn, e.* from(
+			select u.id,u.user_code,u.user_name,o.org_name,u.job_num,u.cell_phone,u.status,u.del_flag
+				from SYSTEM_USER u
+				left join SYSTEM_USER_ORG uo
+				on u.user_code = uo.user_code
+				left join SYSTEM_ORG o
+				on o.org_code = uo.org_code
+	        <where>
+	        	u.del_flag = '0'
+	              <if test="userCode != null and userCode != ''">and u.user_code like '%'||#{userCode}||'%'</if>
+	              <if test="userName != null and userName != ''"> and u.user_name like '%'||#{userName}||'%'</if>
+	              <if test="orgName != null and orgName != ''"> and o.org_name=#{orgName}</if>
+	              <if test="orgCode != null and orgCode != ''"> and o.org_code=#{orgCode}</if>
+	        </where> )E 
+    	where rownum &lt;= ${pageEnd})
+	where rn &gt;= ${pageStart}
+  </select>
+  <select id="queryPageCount" resultType="long">
+	select count(*) from(
+ 				select u.user_code,u.user_name,o.org_name,u.job_num,u.cell_phone
+				from SYSTEM_USER u
+				left join SYSTEM_USER_ORG uo
+				on u.user_code = uo.user_code
+				left join SYSTEM_ORG o
+				on o.org_code = uo.org_code
+	        <where>
+	        u.del_flag = '0'
+	              <if test="userCode != null and userCode != ''">and u.user_code=#{userCode}</if>
+	              <if test="userName != null and userName != ''"> and u.user_name like '%'||#{userName}||'%'</if>
+	              <if test="orgName != null and orgName != ''"> and o.org_name=#{orgName}</if> 
+	              <if test="orgCode != null and orgCode != ''"> and o.org_code=#{orgCode}</if>
+	        </where>)
+  </select>
+  
+  <select id="check" parameterType="java.lang.String" resultType="com.cdsoft.platform.entity.User">
+  	select * from SYSTEM_USER a where user_code= #{userCode}
+  </select>
+  
+	<select id="checks" parameterType="java.lang.String" resultType="int">
+  	select count(*) from SYSTEM_USER a where user_code= #{userCode}
+    </select> 
+  
+  <insert id="insert" parameterType="map">
+  	insert into SYSTEM_USER(
+       id, user_code, user_name, password, create_time, del_flag, create_user, status, job_num, cell_phone,update_time,update_user ) 
+    values(
+       sys_guid(), #{userCode,jdbcType=VARCHAR}, #{userName,jdbcType=VARCHAR}, #{password,jdbcType=VARCHAR}, sysdate, '0', #{createUser,jdbcType=VARCHAR}, '1', #{jobNum,jdbcType=VARCHAR}, #{cellPhone,jdbcType=VARCHAR},sysdate,#{createUser,jdbcType=VARCHAR} )
+  </insert>
+  <insert id="insertRelation" parameterType="map">
+   insert into SYSTEM_USER_ORG(id,user_code,org_code) 
+   values(sys_guid(),#{userCode},#{orgCode})
+  </insert>
+  <select id="getOrgCode" parameterType="map" resultType="java.lang.String">
+  	select org_code from SYSTEM_ORG where org_name = #{orgName,jdbcType=VARCHAR}
+  </select>
+  <update id="update" parameterType="map">
+  	update SYSTEM_USER 
+  	<set>
+  	<if test = "userName != null and userName != ''">
+  	user_name=#{userName},
+  	</if>
+  	<if test = "jobNum != null ">
+  	 job_num=#{jobNum},
+  	</if>
+ 	<if test = "cellPhone != null ">
+  	CELL_PHONE=#{cellPhone}
+  	</if>
+  	</set> 
+  	where user_code = #{userCode}
+  </update>
+  <update id="updateRelation" parameterType="map">
+  update SYSTEM_USER_ORG set org_code = #{orgCode} where user_code = #{userCode}
+  </update>
+  <update id="resetPassWord" parameterType="map">
+  	update SYSTEM_USER set 
+  	<if test = "password != null and password != ''">
+  	password=#{password}
+  	</if>
+  	where user_code = #{userCode}
+  </update>
+  
+  <delete id="delete" parameterType="java.lang.String" >
+    update SYSTEM_USER set del_flag = '1' where user_code in
+    <foreach collection="list" item="item" index="index" open="(" separator="," close=")">
+	  	#{item,jdbcType=VARCHAR}
+  	</foreach>
+  </delete>
+  <select id="selectUserNameByUserCode" parameterType="String" resultType="String">
+  	SELECT USER_NAME FROM SYSTEM_USER WHERE USER_CODE =#{userCode}
+  </select>
+  
+  <select id="list" resultMap="systemUser">
+  	select w.user_code,
+       w.user_name,
+       w.del_flag,
+       w.job_num,
+       w.cell_phone,
+       w.create_user,
+       w.org_name,
+       wm_concat(w.role_name) role_name
+  from (select t.user_code,
+               t.user_name,
+               decode(t.del_flag, '0', '生效', '禁用') del_flag,
+               t.job_num,
+               t.cell_phone,
+               (select user_name
+                  from system_user
+                 where user_code = t.create_user) create_user,
+               (select t1.org_name
+                  from system_org t1, system_user_org t2
+                 where t.user_code = t2.user_code
+                   and t1.org_code = t2.org_code) org_name,
+               (select t3.role_name
+                  from system_role t3, system_role_user t4
+                 where t.user_code = t4.user_code
+                   and t4.role_code = t3.role_code) role_name
+          from system_user t) w
+ group by w.user_code,
+          w.user_name,
+          w.del_flag,
+          w.job_num,
+          w.cell_phone,
+          w.create_user,
+          w.org_name HAVING w.DEL_FLAG='生效'
+
+  </select>
+ </mapper>

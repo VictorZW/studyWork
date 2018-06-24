@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cdsoft.platform.mapper.FileUploadMapper">
+	<select id="queryPage" parameterType="map" resultType="map">
+	SELECT * FROM
+		(SELECT ROWNUM RN, E.* FROM(
+			SELECT
+			T.id,
+			T.file_name fileName,
+			T.File_DEC fileDesc,
+			TO_CHAR(T.CREATE_TIME,'yyyy-MM-dd hh:mm:ss') createTime,
+			(select user_name from system_user where user_code = t.create_user ) createUser,
+			(select value from system_dict where no = T.STATUS and type='filestatus') status
+			FROM SYSTEM_FILE T			
+	        <where>
+	             <if test="fileName != null and fileName != ''"> AND T.file_name LIKE '%'||#{fileName}||'%'</if>
+	              <if test="fileType != null and fileType != ''"> AND T.file_type LIKE '%'||#{fileType}||'%'</if>
+	              <if test="status != null and status != ''"> AND T.status=#{status}</if>
+	              <if test="startTime != null and startTime != '' and endTime != null and endTime != ''">
+	              AND T.CREATE_TIME BETWEEN TO_DATE(#{startTime},'yyyy-MM-dd') AND TO_DATE(#{endTime},'yyyy-MM-dd')+1</if>
+	        </where> ORDER BY t.update_time desc )E 
+    	WHERE ROWNUM &lt;= ${pageEnd})
+	WHERE RN &gt;= ${pageStart}
+  </select>
+  <select id="queryPageCount" resultType="long">
+	SELECT COUNT(*) FROM(
+ 				SELECT
+				*
+				FROM SYSTEM_FILE T				
+	        <where>
+	              <if test="fileName != null and fileName != ''"> AND T.file_name LIKE '%'||#{fileName}||'%'</if>
+	              <if test="fileType != null and fileType != ''"> AND T.file_type LIKE '%'||#{fileType}||'%'</if>
+	              <if test="status != null and status != ''"> AND T.status=#{status}</if>
+	              <if test="startTime != null and startTime != '' and endTime != null and endTime != ''">
+	              AND T.CREATE_TIME BETWEEN TO_DATE(#{startTime},'yyyy-MM-dd') AND TO_DATE(#{endTime},'yyyy-MM-dd')+1</if>
+	        </where>
+	        )
+  </select>
+  
+  <insert id="insertFile" parameterType="map">
+  	INSERT INTO SYSTEM_FILE(id,File_NAME,File_DEC,File_SIZE,file_url,CREATE_TIME,STATUS,FILE_CODE,CREATE_USER,UPDATE_TIME,UPDATE_USER)
+  	VALUES(SEQ_SYSTEM_FILE.NEXTVAL,#{fileName},#{fileDesc},#{fileSize},#{fileUrl},sysdate,#{status},#{fileCode},#{createUser},sysdate,#{updateUser})
+  </insert>
+  
+  <select id="download" parameterType="map" resultType="com.cdsoft.platform.entity.FileBean">
+  SELECT T.File_NAME as fileName,
+  		 T.FILE_CODE as fileCode 
+  		 FROM SYSTEM_FILE T WHERE T.ID = #{fileid}
+  </select>
+   
+</mapper>

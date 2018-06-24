@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.cdsoft.platform.mapper.DictMapper" >
+	<resultMap id="systemDict" type="com.cdsoft.platform.entity.Dict" >
+		<id column="ID" property="id" jdbcType="VARCHAR" />
+		<result column="NO" property="no" jdbcType="VARCHAR" />
+		<result column="PARENT_NO" property="parentNo" jdbcType="VARCHAR" />
+		<result column="value" property="value" jdbcType="VARCHAR" />
+		<result column="TYPE" property="type" jdbcType="VARCHAR" />
+		<result column="NOTE" property="note" jdbcType="VARCHAR" />
+		<result column="CONTENT" property="content" jdbcType="VARCHAR" />
+		<result column="MENU_CODE" property="menuCode" jdbcType="VARCHAR" />
+		<result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
+    	<result column="CREATE_TIME" property="createTime" jdbcType="DATE" />
+    	<result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
+    	<result column="UPDATE_TIME" property="updateTime" jdbcType="DATE" />
+	</resultMap>
+	<select id="queryPage" parameterType="map" resultType="map">	 
+	select * from
+		(select rownum rn, e.* from(
+			select a.id dictId, 
+			a.value dictName, 
+			a.parent_no parentNo, 
+			b.value dictType,
+			a.no dictCode 
+			from system_dict a  left outer join system_dict b on a.parent_no = b.no 
+	        <where>
+	        	a.parent_no not in('0')
+	              <if test="dictName != null and dictName != ''"> and a.value like '%'||#{dictName}||'%'</if>
+	              <if test="parentNo != null and parentNo != ''">and a.parent_no = #{parentNo}</if>
+	        </where> )e 
+    	where rownum &lt;= ${pageEnd})
+	where rn &gt;= ${pageStart}
+</select>
+<select id="queryPageCount" parameterType="map" resultType="long">	 
+		select count(*) from(
+			select 1 
+			from system_dict a  left outer join system_dict b on a.parent_no = b.no 
+	        <where>
+	        a.parent_no not in('0')
+	              <if test="dictName != null and dictName != ''"> and a.value like '%'||#{dictName}||'%'</if>
+	              <if test="parentNo != null and parentNo != ''">and a.parent_no = #{parentNo}</if>
+	        </where> )
+</select>
+
+<select id="queryDictType" resultType="map">
+	select a.id dictId, a.value dictName, a.parent_no parentNo, a.no dictCode from system_dict a where parent_no = '0'
+</select>
+
+
+	<select id="selDictTree" resultMap="systemDict">
+		select 
+			*
+		 from SYSTEM_DICT  where parent_no = '0'
+	</select>
+
+<!-- <insert id="addDictType" parameterType="map">
+	INSERT INTO system_dict(ID,VALUE,PNO,NO) values(#{dictid},#{dictName},'0',DICT_TYPE_NO.NEXTVAL)
+</insert> -->
+
+<insert id="addDict" parameterType="map">
+	insert into system_dict(id,value,parent_no,no,create_time) 
+	values(#{dictId,jdbcType=VARCHAR},#{dictName,jdbcType=VARCHAR},#{parentNo,jdbcType=VARCHAR}
+	<choose>
+		<when test="no!=null and no!=''">
+		,#{no}
+		</when> 
+		<otherwise>,concat('',seq_system_dict_no.nextval)</otherwise>
+	</choose>
+	<choose>
+		<when test="createTime!=null and createTime!=''">
+		,TO_DATE(#{createTime},'yyyy-MM-dd hh24:mi:ss')
+		</when> 
+		<otherwise>,sysdate</otherwise>
+	</choose>
+	)
+</insert>
+
+<delete id="deleteRow" parameterType="map">
+	delete from system_dict where id = #{dictId}
+</delete>
+<select id="check1" parameterType="map" resultType="int">
+	select count(*) from system_dict where value = #{dictType} and parent_no = 0
+</select>
+
+<select id="check2" parameterType="map" resultType="int">
+	select count(*) from system_dict where no = #{no} and parent_no = #{parentNo}
+</select>
+
+<select id="list" parameterType="map" resultType="map">
+	select no,value,type from system_dict where parent_no != '0' 
+	<if test="dictType != null and dictType != ''"> 
+	and type = #{dictType}
+	</if>
+</select>
+
+<select id="queryNoByValue" parameterType="map" resultType="String">
+	select no  from system_dict where type=#{type} and value = #{value}
+</select>
+
+<select id="queryByType" parameterType="String" resultType="map">
+	<!-- 	select no,value from system_dict where type=#{type} and parent_no!= '0' -->
+	select no,value from system_dict where PARENT_NO = (select no from  system_dict where type = #{type} and parent_no = '0')
+</select>
+
+<select id="selNewType" parameterType="String" resultMap="systemDict">
+	select * from SYSTEM_DICT  where create_time = to_date(#{createTime}, 'yyyy-MM-dd hh24:mi:ss')
+</select>
+	<update id="updateDictByNo" parameterType="map">
+		UPDATE SYSTEM_DICT SET UPDATE_TIME=sysdate
+		<if test="value != null and value != ''">
+		,VALUE = #{value}
+		</if>
+		<if test="type != null and type != ''">
+		,TYPE = #{type}
+		</if>
+		WHERE no = #{no} and parent_no='0'
+	</update>
+	<delete id="deleteDictType" parameterType="map">
+	delete from system_dict where no = #{no} and parent_no='0'
+	</delete>
+	<update id="updateDict" parameterType="map">
+		UPDATE SYSTEM_DICT SET UPDATE_TIME=sysdate
+		<if test="value != null and value != ''">
+		,VALUE = #{value}
+		</if>
+		<if test="no != null and no != ''">
+		,NO = #{no}
+		</if>
+		<if test="type != null and type != ''">
+		,TYPE = #{type}
+		</if>
+		WHERE id = #{id}
+	</update>
+	<select id="queryType" resultMap="systemDict">
+		select id,type from system_dict WHERE PARENT_NO =0
+	</select>
+</mapper>

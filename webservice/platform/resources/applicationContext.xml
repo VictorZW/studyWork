@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:context="http://www.springframework.org/schema/context" xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xsi:schemaLocation="  
+    http://www.springframework.org/schema/beans   
+    http://www.springframework.org/schema/beans/spring-beans-3.0.xsd  
+    http://www.springframework.org/schema/tx   
+    http://www.springframework.org/schema/tx/spring-tx-3.0.xsd   
+    http://www.springframework.org/schema/context   
+    http://www.springframework.org/schema/context/spring-context-3.0.xsd
+    http://www.springframework.org/schema/aop 
+    http://www.springframework.org/schema/aop/spring-aop.xsd">
+
+	<!-- 引入jdbc配置文件 -->
+	<context:property-placeholder location="classpath:jdbc.properties" />
+
+	<!--动态数据源dataSource-->
+	<bean id="dynamicDataSource" class="com.cdsoft.platform.common.DynamicDataSource" >
+		<property name="targetDataSources">
+			<map key-type="java.lang.String">
+				<!--通过不同的key决定用哪个dataSource-->
+				<entry value-ref="dataSource" key="dataSource"></entry>
+				<entry value-ref="dataSourceEcharts" key="dataSourceEcharts"></entry>
+			</map>
+		</property>
+		<!--设置默认的dataSource-->
+		<property name="defaultTargetDataSource" ref="dataSource">
+		</property>
+	</bean>
+
+	<!--创建jdbc数据源 -->
+	<bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource"
+		destroy-method="close">
+		<property name="driverClassName" value="${driverClassName}" />
+		<property name="url" value="${url}" />
+		<property name="username" value="${username}" />
+		<property name="password" value="${password}" />
+	</bean>
+
+	<!--echarts指标展示数据源配置-->
+	<bean id="dataSourceEcharts" class="org.apache.commons.dbcp.BasicDataSource"
+		  destroy-method="close">
+		<property name="driverClassName" value="${driverClassName}" />
+		<property name="url" value="${echarts.url}" />
+		<property name="username" value="${echarts.username}" />
+		<property name="password" value="${echarts.password}" />
+	</bean>
+
+	<!-- 创建SqlSessionFactory，同时指定数据源 -->
+	<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+		<property name="dataSource" ref="dynamicDataSource" />
+		<property name="configLocation" value="classpath:mybatis-config.xml"></property>
+	</bean>
+
+	<!-- (事务管理)transaction manager, use JtaTransactionManager for global tx -->
+	<bean id="transactionManager"
+		  class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+		<property name="dataSource" ref="dynamicDataSource" />
+	</bean>
+
+	<!-- 可通过注解控制事务 -->
+	<tx:annotation-driven/>
+
+	<!-- Mapper接口所在包名，Spring会自动查找其下的Mapper -->
+	<bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+		<property name="basePackage" value="com.cdsoft.*.mapper,com.cdsoft.mcm.*.mapper" />
+		<property name="sqlSessionFactoryBeanName" value="sqlSessionFactory"/>
+	</bean>
+
+	<context:component-scan base-package="com">
+  		<context:exclude-filter type="annotation" expression="org.springframework.stereotype.Controller" /> 
+	</context:component-scan>
+
+	<!--  这里申明的id必须为multipartResolver  -->  
+	<bean id="multipartResolver"  
+	    class="org.springframework.web.multipart.commons.CommonsMultipartResolver">  
+	    <!-- one of the properties available; the maximum file size in bytes -->  
+	    <property name="maxUploadSize">  
+       		 <value>1048576</value>  
+  	   </property>
+	</bean> 
+	
+	<!-- Shiro的Web过滤器 -->
+	<bean id="shiroFilter" class="org.apache.shiro.spring.web.ShiroFilterFactoryBean">
+		<property name="securityManager" ref="securityManager" />
+		<property name="loginUrl" value="/web/login/loginForPC.do" />
+		<property name="successUrl" value="/pages/platform/jsp/home/index.jsp"></property>
+		<property name="unauthorizedUrl" value="/unauthorized.jsp" />
+		<property name="filters">
+			<map>
+				<entry key="authc" value-ref="formAuthenticationFilter" />
+			</map>
+		</property>
+		<property name="filterChainDefinitions">
+			<value>
+				/pages/platform/jsp/home/index.jsp = authc
+				/unauthorized.jsp = anon
+				/pages/platform/css/** =anon
+				/pages/platform/easyui/** =anon
+				/pages/platform/images/** =anon
+				/pages/platform/js/** =anon
+				/logout = logout
+				/web/**=authc
+				/android/**=anon
+				/touch/**=anon
+			</value>
+		</property>
+	</bean>
+	<!-- Realm实现  修改密码先清空AuthenticationInfo 调用Realm的clearCachedAuthenticationInfo方法
+		 修改用户或增加用户角色权限 调用Realm的clearCachedAuthorizationInfo方法 先清缓存
+		 可以用clearCache方法 全部都清空 如果有必要需要自己实现
+	-->
+	<bean id="userRealm" class="com.cdsoft.platform.shiro.UserRealm">
+		<property name="cachingEnabled" value="true"/>
+		
+		<property name="credentialsMatcher">
+		   <bean class="org.apache.shiro.authc.credential.HashedCredentialsMatcher">
+                    <property name="hashAlgorithmName" value="MD5" />
+           </bean>
+	       </property>
+	       
+        <property name="authenticationCachingEnabled" value="false"/><!-- 启用身份验证缓存 -->
+        <property name="authenticationCacheName" value="authenticationCache"/><!--缓存AuthenticationInfo信息的缓存名称-->
+        <property name="authorizationCachingEnabled" value="true"/><!--授权缓存-->
+        <property name="authorizationCacheName" value="authorizationCache"/><!-- 缓存AuthorizationInfo信息的缓存名称-->
+	</bean>
+	
+	<!-- 配置shiro bean processor-->  
+   <bean id="lifecycleBeanPostProcessor" class="org.apache.shiro.spring.LifecycleBeanPostProcessor" /> 
+	
+	<!-- 安全管理器 -->
+	<bean id="securityManager" class="org.apache.shiro.web.mgt.DefaultWebSecurityManager">
+		<property name="realm" ref="userRealm" />
+		<property name="cacheManager" ref="cacheManager"/>
+	</bean>
+	
+	<!-- 基于Form表单的身份验证过滤器 -->
+	<bean id="formAuthenticationFilter" class="com.cdsoft.platform.filter.MyFormAuthenticationFilter">
+		<property name="usernameParam" value="userCode" />
+		<property name="passwordParam" value="password" />
+		<property name="loginUrl" value="/web/login/loginForPC.do" />
+		<property name="successUrl" value="/pages/platform/jsp/home/index.jsp" />
+	</bean>
+	
+	
+	<bean
+		class="org.springframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreator"
+		depends-on="lifecycleBeanPostProcessor" />
+	<!-- 缓存管理器 -->
+    <bean id="cacheManager" class="com.cdsoft.platform.shiro.cache.SpringCacheManagerWrapper">
+        <property name="cacheManager" ref="springCacheManager"/>
+    </bean>
+      <bean id="springCacheManager" class="org.springframework.cache.ehcache.EhCacheCacheManager">
+        <property name="cacheManager" ref="ehcacheManager"/>
+    </bean>
+
+    <!--ehcache-->
+    <bean id="ehcacheManager" class="org.springframework.cache.ehcache.EhCacheManagerFactoryBean">
+        <property name="configLocation" value="classpath:ehcache.xml"/>
+    </bean>
+</beans>  
