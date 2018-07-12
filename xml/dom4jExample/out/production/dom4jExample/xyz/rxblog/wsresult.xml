@@ -1,0 +1,177 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+
+<Message> 
+  <Head> 
+    <CREATETIME name="生成时间" type="TIME@NODE"/>  
+    <RESPONSECODE type="STATUS@CODE">0000</RESPONSECODE>
+    <RESPONSEINFO/>  
+    <DIGITALSIGN name="数字签名" type="CERTIFICATE"/> 
+  </Head>  
+  <Data type="CERTIFICATE@BODY"> 
+    <BDCFKLIST type="DATA@LIST@NODE"> 
+      <BDCCXJG name="不动产查询结果"> 
+        <CXQQDH name="查询请求单号"/>  
+        <RESULT type="RESPONSE@CODE@NODE">0000</RESULT>
+        <TDSYQLIST> 
+          <TDSYQ name="土地所有权"> 
+            <BDCDYH>11102394857</BDCDYH>
+            <ZL>山东省济南市历下区</ZL> 
+            <ZDMJ>1000.99</ZDMJ> 
+            <MJDW>公顷</MJDW>
+            <YT>果园</YT>  
+            <QLXZ>集体土地</QLXZ>  
+            <BDCQZH/> 
+            <DJJG>X市不动产登记局</DJJG>
+          </TDSYQ> 
+          <TDSYQ name="土地所有权"> 
+            <BDCDYH>1823Yis987IWS11</BDCDYH>
+            <ZL>北京市</ZL> 
+            <ZDMJ>19999.87</ZDMJ> 
+            <MJDW>公顷</MJDW> 
+            <YT>垃圾场</YT>  
+            <QLXZ>集体土地</QLXZ>
+            <BDCQZH>AAII845743</BDCQZH> 
+            <DJJG>北京市不动产登记局</DJJG>
+          </TDSYQ> 
+        </TDSYQLIST>  
+        <JSYDSYQLIST> 
+          <JSYDSYQ name="建设用地使用权、宅基地使用权"> 
+            <BDCDYH>1101102Wss98</BDCDYH>
+            <ZL>青岛市崂山区北京路1号</ZL> 
+            <YT>城镇住宅用地</YT>  
+            <SYQMJ>200.00(平方米)</SYQMJ>  
+            <QLXZ/>  
+            <SYQQSSJ/>  
+            <!--国有建设用地需填写-->     
+            <SYQJSSJ/>  
+            <!--国有建设用地需填写-->      
+            <BDCQZH/> 
+            <DJJG/> 
+          </JSYDSYQ> 
+        </JSYDSYQLIST>  
+        <FDCQLIST> 
+          <FDCQ name="房地产权"> 
+            <BDCDYH>1101983W889AAU7</BDCDYH>  
+            <FDZL>B市X路8号</FDZL> 
+            <JZMJ>118.00(平方米)</JZMJ>
+            <GHYT>城镇住宅用地</GHYT>
+            <FWXZ/>                   
+            <JGSJ/>  
+            <TDSYQSSJ/> 
+            <TDDYJSSJ/>  
+            <BDCQZH/> 
+            <DJJG/> 
+          </FDCQ> 
+        </FDCQLIST>  
+        <HYSYQLIST> 
+          <HYSYQ name="海域(含无居民海岛)使用权"> 
+            <BDCDYH>YY1108728GH8890</BDCDYH> 
+            <XMMC>x用海项目</XMMC> 
+            <YHWZSM>渤海</YHWZSM>                   
+            <YHLXA>渔业用海</YHLXA>
+            <YHLXB>围海养殖用海</YHLXB>               
+            <HDMC/>                                    
+            <HDWZ/>              
+            <HDYT/>             
+            <SYQMJ>10.000（公顷）</SYQMJ>                
+            <SYQQSSJ/>                   
+            <SYQJSSJ/>                    
+            <BDCQZH/> 
+            <DJJG/>
+          </HYSYQ> 
+        </HYSYQLIST>  
+        <GJZWSYQLIST> 
+          <GJZWSYQ name="构（建）筑物所有权"> 
+            <BDCDYH>1101999GB88900</BDCDYH>  
+            <ZL>济南市历下区泺源大街3389号</ZL> 
+            <GJZWGHYT>加油站</GJZWGHYT>
+            <GJZWMJ>200.00（平方米）</GJZWMJ>  
+            <TDHYSYQSSJ/>  
+            <TDHYSYJSSJ/>  
+            <BDCQZH/>  
+            <DJJG/> 
+          </GJZWSYQ> 
+        </GJZWSYQLIST>  
+        <LQLIST> 
+          <LQ name="林权"> 
+            <BDCDYH>1123112</BDCDYH>  
+            <ZL>x市x林场</ZL>  
+            <SYQMJ>19283.00（亩）</SYQMJ>
+            <LDSYQSSJ/>  
+            <LDSYJSSJ/>  
+            <BDCQZH/>  
+            <DJJG/> 
+          </LQ> 
+        </LQLIST>  
+        <DYAQLIST> 
+          <DYAQ name="抵押权"> 
+            <BDCDYH>1101102Wss98</BDCDYH>  
+            <DYBDCLX>土地</DYBDCLX> 
+            <ZL>青岛市崂山区</ZL>  
+            <DYR>阿黄</DYR>
+            <DYFS>一般抵押</DYFS>  
+            <ZWLXQSSJ/>  
+            <ZWLXJSSJ/>  
+            <BDCDJZMH/> 
+            <DJJG/>
+          </DYAQ> 
+          <DYAQ name="抵押权"> 
+            <BDCDYH>1101983W889AAU7</BDCDYH>  
+            <DYBDCLX>土地</DYBDCLX> 
+            <ZL>济南市历下区</ZL>  
+            <DYR>封杀</DYR>
+            <DYFS>一般抵押</DYFS>  
+            <ZWLXQSSJ/>  
+            <ZWLXJSSJ/>  
+            <BDCDJZMH/> 
+            <DJJG/>
+          </DYAQ>
+          <DYAQ name="抵押权"> 
+            <BDCDYH>111123232</BDCDYH>  
+            <DYBDCLX>土地和房屋</DYBDCLX> 
+            <ZL>北京市海淀区</ZL>  
+            <DYR>曾阿牛</DYR>
+            <DYFS>一般抵押</DYFS>  
+            <ZWLXQSSJ/>  
+            <ZWLXJSSJ/>  
+            <BDCDJZMH/> 
+            <DJJG/>
+          </DYAQ> 
+        </DYAQLIST>  
+        <YGDJLIST> 
+          <YGDJ name="预告登记"> 
+            <BDCDYH>111123232</BDCDYH>  
+            <YGDJZL>预售商品房抵押权预告登记</YGDJZL> 
+            <ZL>北京市海淀区</ZL> 
+            <GHYT>住宅</GHYT>           
+            <JZMJ>198.00（平方米）</JZMJ>
+            <BDCDJZMH/> 
+            <DJJG/>
+          </YGDJ> 
+        </YGDJLIST>  
+        <CFDJLIST> 
+          <CFDJ name="查封登记"> 
+            <BDCDYH>1101102Wss98</BDCDYH>
+            <ZL>A市A区A路12号</ZL>  
+            <CFJG>X市中级人民法院</CFJG>  
+            <CFLX>查封</CFLX>
+            <CFWH>(2016)房查字第0001号</CFWH>
+            <CFQSSJ/> 
+            <CFJSSJ/>  
+            <DJJG/>
+          </CFDJ>
+          <CFDJ name="查封登记"> 
+            <BDCDYH>111123232</BDCDYH>
+            <ZL>北京市海淀区</ZL>  
+            <CFJG>北京市市中级人民法院</CFJG>  
+            <CFLX>预查封</CFLX>
+            <CFWH>(2016)房查字第0001号</CFWH>
+            <CFQSSJ/> 
+            <CFJSSJ/>  
+            <DJJG/>
+          </CFDJ>  
+        </CFDJLIST>
+      </BDCCXJG> 
+    </BDCFKLIST> 
+  </Data> 
+</Message>
