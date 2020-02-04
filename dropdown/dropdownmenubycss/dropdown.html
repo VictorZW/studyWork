@@ -10,8 +10,8 @@
     <link href="" rel="stylesheet">
     <script type="text/javascript">
     /* 当用户点击button，dropdown 下拉菜单会来回切换隐藏和显示*/
-    function myFunction() {
-        document.getElementById("myDropdown").classList.toggle("show");
+    function toggleShow() {
+        document.getElementById("dropDownMenu").classList.toggle("show");
     }
 
     // Close the dropdown menu if the user clicks outside of it
@@ -85,8 +85,8 @@
 
 <body>
     <div class="dropdown">
-        <button onclick="myFunction()" class="dropbtn">Dropdown</button>
-        <div id="myDropdown" class="dropdown-content">
+        <button onclick="toggleShow();" class="dropbtn">Dropdown</button>
+        <div id="dropDownMenu" class="dropdown-content">
             <a href="#">Link 1</a>
             <a href="#">Link 2</a>
             <a href="#">Link 3</a>
